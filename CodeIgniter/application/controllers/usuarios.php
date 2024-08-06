@@ -10,44 +10,45 @@ class Usuarios extends CI_Controller {
 	}
    public function validarusuario()
     {
-        $login=$_POST['login'];
-        $password=md5($_POST['password']);
+      $username=$_POST['username'];
+      $password=sha1($_POST['password']);
 
+     // echo 'Username: ' . htmlspecialchars($username) . '<br>';
+     // echo 'Password: ' . htmlspecialchars($password) . '<br>';
 
-        echo $login;
-        echo $password;
+      //  echo $username;
+       // echo $password;
 
-        $consulta=$this->usuario_model->validar($login,$password);
+       $consulta=$this->usuario_model->validar($username,$password);
    
-        echo $consulta->num_rows();
-        if($consulta->num_rows()>0)
-        {
-            
-            //usuario valido
-            
+       echo $consulta->num_rows();
+       if($consulta->num_rows()>0)
+       {         
+            //usuario valido           
             foreach($consulta->result()as $row)
-            {
-                $this->session->set_userdata('idUsuario',$row->idusuario);
-                $this->session->set_userdata('login',$row->login);
-                $this->session->set_userdata('tipo',$row->tipo);
+           {
+                $this->session->set_userdata('idUsuario',$row->idUsuario);
+                $this->session->set_userdata('username',$row->username);
                 redirect('usuarios/panel','refresh');
             }
         }
         else
        {
              //usuario incorrecto-volvemos a login
-            redirect('usuarios/index','refresh');
+               redirect('usuarios/index','refresh');
         }
     }
        public function panel()
     {
-        if($this->session->userdata('login'))
+        if($this->session->userdata('username'))
         {
-            redirect('C_libro/m_listar','refresh');
+           $this->load->view('v_catalogo'); 
+          // redirect('C_libro/m_listar','refresh');
+              
         }
         else
         {
-            redirect('usuarios/index','refresh');
+           redirect('usuarios/index','refresh');
         }
     }
     public function logout()
@@ -55,4 +56,8 @@ class Usuarios extends CI_Controller {
        $this->session->sess_destroy();
         redirect('usuarios/index','refresh');
     }
+
 }
+
+
+

@@ -30,13 +30,13 @@
        echo form_open_multipart("usuarios/validarusuario");
        ?>
             <div class="group-material-login">
-              <input type="text" class="material-login-control" name="login" placeholder="Escribe login" required>
+              <input type="text" class="material-login-control" name="username" required>
               <span class="highlight-login"></span>
               <span class="bar-login"></span>
               <label><i class="zmdi zmdi-account"></i> &nbsp; USUARIO</label>
             </div><br>
             <div class="group-material-login">
-              <input type="password" class="material-login-control" name="password" placeholder="Escribe password" required>
+              <input type="password" class="material-login-control" name="password"required>
               <span class="highlight-login"></span>
               <span class="bar-login"></span>
               <label><i class="zmdi zmdi-lock"></i> &nbsp; CONTRASEÑA</label>

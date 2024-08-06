@@ -6,66 +6,76 @@ class C_usuario extends CI_Controller {
 
     public function m_listar()
 	{
-        //$this->load->model('Libros_model'); // Cargar el modelo
+        $this->load->model('Usuarios_model'); // Cargar el modelo
         $listar=$this->Usuarios_model->listadeusuarios();
         $data['usuarios']=$listar;
         //$this->load->view('temp/head');
-	    //$this->load->view('temp/menu');
-        $this->load->view('v_listadeusuarios',$data);
-       // $this->load->view('temp/test');
-	 // $this->load->view('temp/footer');
+	      //$this->load->view('temp/menu');
+        $this->load->view('temp/v_listausuarios',$data);
+        // $this->load->view('temp/test');
+	      // $this->load->view('temp/footer');
     }
-  /*public function agregar()
+     public function agregar()
   {
       //$this->load->view('temp/head');
      // $this->load->view('temp/menu');
-      $this->load->view('v_formulario');
+      $this->load->view('temp/v_agregarUsuario');
      // $this->load->view('temp/test');
      // $this->load->view('temp/footer');
   }
   public function agregarbd()
   {
     //$this->load->model('Libros_model'); 
-    $data['titulo']=strtoupper($_POST['titulov']);
-    $data['autor']=strtoupper($_POST['autorv']);
-    $data['isbn']=($_POST['isbnv']);
-    $data['categoria']=strtoupper($_POST['categoriav']);
-    $data['numeroPaginas']=$_POST['numeroPaginasv'];
-    $data['editorial']=strtoupper($_POST['editorialv']);
-    $data['anioPublicacion']=$_POST['anioPublicacionv'];
+    $this->load->model('Usuarios_model');
+    $data['nombres']=strtoupper($_POST['nombresv']);
+    $data['apellidos']=strtoupper($_POST['apellidosv']);
+    $data['direccion']=strtoupper($_POST['direccionv']);
+    $data['telefono']=strtoupper($_POST['telefonov']);
+    $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
+    $data['genero']=strtoupper($_POST['generov']);
+    $data['estado']=strtoupper($_POST['estadov']);
+    $data['userName']=$_POST['userNamev'];
+    $data['password']=$_POST['passwordv'];
+    $data['rol']=strtoupper($_POST['rolv']);
 
-    $this->Libros_model->agregarlibro($data);
-    redirect('C_libro/m_listar','refresh');//REDIRECIONA
+    $this->Usuarios_model->agregarusuario($data);
+    redirect('C_usuario/m_listar','refresh');//REDIRECIONA
   }
   public function eliminarbd()
   {
-  $idlibro=$_POST['idlibro'];
-  $this->Libros_model->eliminarlibro($idlibro);
-  redirect('C_libro/m_listar','refresh');//REDIRECIONA
+  $this->load->model('Usuarios_model'); 
+  $idUsuario=$_POST['idUsuario'];
+  $this->Usuarios_model->eliminarusuario($idUsuario);
+  redirect('C_usuario/m_listar','refresh');//REDIRECIONA
   }
   public function modificar()
   {
-    $idlibro=$_POST['idlibro'];
+    $this->load->model('Usuarios_model');
+    $idUsuario=$_POST['idUsuario'];
     //echo $idlibro;
-	  $data['infolibro']=$this->Libros_model->recuperarlibro($idlibro);
+	  $data['infousuario']=$this->Usuarios_model->recuperarusuario($idUsuario);
    // $this->load->view('temp/head');
     //$this->load->view('temp/menu');
-    $this->load->view('formulario2',$data);
+    $this->load->view('temp/v_modificarUsuario',$data);
     //$this->load->view('temp/test');
    // $this->load->view('temp/footer');
   }
 	public function modificarbd()
 	{
-	  $idlibro=$_POST['idlibro'];
-    $data['titulo']=strtoupper($_POST['titulov']);
-    $data['autor']=strtoupper($_POST['autorv']);
-    $data['isbn']=($_POST['isbnv']);
-    $data['categoria']=strtoupper($_POST['categoriav']);
-    $data['numeroPaginas']=$_POST['numeroPaginasv'];
-    $data['editorial']=strtoupper($_POST['editorialv']);
-    $data['anioPublicacion']=$_POST['anioPublicacionv'];
+    $this->load->model('Usuarios_model');
+	  $idUsuario=$_POST['idUsuario'];
+    $data['nombres']=strtoupper($_POST['nombresv']);
+    $data['apellidos']=strtoupper($_POST['apellidosv']);
+    $data['direccion']=strtoupper($_POST['direccionv']);
+    $data['telefono']=strtoupper($_POST['telefonov']);
+    $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
+    $data['genero']=strtoupper($_POST['generov']);
+    $data['estado']=strtoupper($_POST['estadov']);
+    $data['username']=$_POST['userNamev'];
+    $data['password']=$_POST['passwordv'];
+    $data['rol']=strtoupper($_POST['rolv']);
 
-		$this->Libros_model->modificarlibro($idlibro,$data);
-		redirect('C_libro/m_listar','refresh');
-	}*/
+		$this->Usuarios_model->modificarusuario($idUsuario,$data);
+		redirect('C_usuario/m_listar','refresh');
+	}
 }

@@ -493,11 +493,17 @@ input.material-control:focus ~ .highlight {
 /* col-xs */
 @media (max-width: 767px) {
     .navbar-lateral{
-        position: fixed;
+     width: 20%; /* Línea actual: Ajusta según el ancho que necesitas */
+     height: 100%;
+     position: absolute; /* Línea actual: Cambia a fixed */
+     top: 0;
+     left: 0;
+     z-index: 1;
+       /* position: fixed;
         width: 100%;
         z-index: 9999;
         background-color: transparent;
-        display: none;
+        display: none;*/
     }
     .container-menu-movile{
         width: 320px;
@@ -512,7 +518,14 @@ input.material-control:focus ~ .highlight {
         width: 100%;
     }
     .form-container{ width: 97%; max-width: 370px;}  
-    .content-page-container{ width: 100%; }
+      /*content-page-container{ width: 100%; }*/
+     .content-page-container {
+        margin-left: 20%; /* Ajusta este valor para que coincida con el ancho del menú lateral */
+        width: 80%; /* Ajusta según el ancho que necesites */
+        height: 100%;
+        position: relative; /* Cambia a relative para que el contenido se mueva correctamente */
+        background-color: #fff;
+
     .navbar-user-top > ul > li{ margin: 0 10px; }
     form.form_SRCB{ padding: 7px;}
     .table-responsive {
@@ -522,6 +535,7 @@ input.material-control:focus ~ .highlight {
     .modal-body {
         max-height: 300px;
     }
+}
 }
 
 /* col-sm */
