@@ -1,5 +1,4 @@
-<?php
-/*
+
  <h1>Lista de usuarios</h1>
 <br>
 <a href="<?php echo base_url(); ?>index.php/usuarios/logout">
@@ -56,16 +55,7 @@ echo date('Y/m/d H:i:s');
             <td><?php echo $row->password; ?></td>
             <td><?php echo $row->rol; ?></td>
 
-			<td>
-			<?php
-             echo form_open_multipart("C_usuario/modificar");
-            ?>
-			<input type="hidden" name="idUsuario" value="<?php echo $row->idUsuario; ?>">
-			<button type=submit type="submit" class="btn btn-primary">Editar</button>
-	        <?php
-            echo form_close();
-            ?>
-			</td>
+			
 
 			<td>
 			<?php
@@ -88,5 +78,3 @@ echo date('Y/m/d H:i:s');
 		?>
 	</tbody>
 </table> 
-*/
-?>
