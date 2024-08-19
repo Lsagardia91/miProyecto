@@ -1,4 +1,4 @@
-<!--<h1>ingreso de usuarios</h1>
+<h1>ingreso de usuarios</h1>
 <br>
 
 < ?php
@@ -13,4 +13,3 @@ echo form_open_multipart("usuarios/validarusuario");
 	
 < ?php
 echo form_close();
-?>

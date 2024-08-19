@@ -1,5 +1,4 @@
-<?php
-/*
+
 <br><br>
 <h1>Editar Usuario</h1>
 <br>  
@@ -43,10 +42,9 @@
     escribe el rol"value="<?php echo $row->rol; ?>"required>
 
     <button type="submit" class="btn btn-success">Modificar Usuario</button>
+    <button type="submit" class="btn btn-success">Modificar Usuario</button>
 
 <?php
 echo form_close();
 }
-?>
-*/
 ?>

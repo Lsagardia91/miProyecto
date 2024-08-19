@@ -1,5 +1,4 @@
-<?php
-/*
+
 
 <br><br>
 <h1>AGREGAR LIBRO</h1>
@@ -36,7 +35,5 @@
     <?php
       echo form_close();
     ?>
-  */
-?>
-  
+
 

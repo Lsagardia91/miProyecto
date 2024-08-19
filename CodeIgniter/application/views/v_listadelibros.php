@@ -1,5 +1,4 @@
-<?php
-/*
+
 <h1>Lista de libros disponibles</h1>
 <br>
 
@@ -79,7 +78,15 @@ echo date('Y/m/d H:i:s');
             ?>
 			</td>
 
-
+			<?php
+             echo form_open_multipart("C_libro/eliminarbd");
+            ?>
+			<input type="hidden" name="idlibro" value="<?php echo $row->idLibro; ?>">
+			<button type=submit type="submit" class="btn btn-danger">Eliminar</button>
+	        <?php
+            echo form_close();
+            ?>
+			</td>
 		
 
 		</tr>
@@ -89,5 +96,3 @@ echo date('Y/m/d H:i:s');
 		?>
 	</tbody>
 </table>
-*/
-?>

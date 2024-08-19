@@ -1,5 +1,3 @@
-<?php
-/*
 
 <br><br>
 <h1>Agregar Usuario</h1>
@@ -32,12 +30,13 @@
     escribe el rol"required>
 
     <button type="submit" class="btn btn-success" >Agregar Usuario</button>
+    <button type="submit" class="btn btn-success" >Agregar Usuario</button>
+    <button type="submit" class="btn btn-success" >Agregar Usuario</button>
    
    <!--  </form>
     <?php
       echo form_close();
     ?>
-    */
-?>
+
   
   
