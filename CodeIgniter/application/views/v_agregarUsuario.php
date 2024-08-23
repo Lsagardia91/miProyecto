@@ -18,6 +18,8 @@
     escribe el telefono"required>
     <input type="text" class="form-control" name="carnetIdentidadv" placeholder="
     escribe el carnet de identidad"required>
+    <input type="email" class="form-control" name="correoElectronicov" placeholder="
+    escribe tu correo electronico "required>
     <input type="text" class="form-control" name="generov" placeholder="
     escribe el genero"required>
     <input type="text" class="form-control" name="estadov" placeholder="
@@ -30,8 +32,7 @@
     escribe el rol"required>
 
     <button type="submit" class="btn btn-success" >Agregar Usuario</button>
-    <button type="submit" class="btn btn-success" >Agregar Usuario</button>
-    <button type="submit" class="btn btn-success" >Agregar Usuario</button>
+   
    
    <!--  </form>
     <?php
