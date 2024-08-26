@@ -78,4 +78,33 @@ class C_usuario extends CI_Controller {
 		$this->Usuarios_model->modificarusuario($idUsuario,$data);
 		redirect('C_usuario/m_listar','refresh');
 	}
+  public function deshabilitarbd()
+	{
+		$idjugador=$_POST['idjugador'];
+		$data['estado']='0';
+
+		$this->estudiante_model->modificarestudiante($idjugador,$data);
+		redirect('estudiante/index','refresh');
+	}
+
+	public function deshabilitados()
+	{
+		$lista=$this->estudiante_model->listaestudiantesdeshabilitados();
+		$data['estudiantes']=$lista;
+		
+
+		$this->load->view('inc/header');
+		$this->load->view('listadeshabilitados',$data);
+		$this->load->view('inc/footer');
+	}
+
+	public function habilitarbd()
+	{
+		$idjugador=$_POST['idjugador'];
+		$data['habilitado']='1';
+
+		$this->estudiante_model->modificarestudiante($idjugador,$data);
+		redirect('estudiante/deshabilitados','refresh');
+	}
+
 }

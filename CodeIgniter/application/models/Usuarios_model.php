@@ -31,6 +31,12 @@ class Usuarios_model extends CI_Model {
 		$this->db->where('idUsuario',$idUsuario);
 		$this->db->update('usuario',$data);
 	}
-
+    public function listaestudiantesdeshabilitados()
+	{
+		$this->db->select('*'); // slecet *
+		$this->db->from('estudiantes'); //tabla
+		$this->db->where('habilitado','0');
+		return $this->db->get(); //devolución del resultado de la consulta
+	}
 }
  
