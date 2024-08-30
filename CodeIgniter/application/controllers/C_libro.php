@@ -73,4 +73,55 @@ class C_libro extends CI_Controller {
 		$this->Libros_model->modificarlibro($idLibro,$data);
 		redirect('C_libro/m_listar','refresh');
 	}
+
+  public function listapdf()
+	{
+		if($this->session->userdata('tipo')=='admin')
+		{ 
+			$lista=$this->estudiante_model->listaestudiantes();
+			$lista=$lista->result();
+
+			$this->pdf=new Pdf();
+			$this->pdf->AddPage();
+			$this->pdf->AliasNbPages();
+			$this->pdf->SetTitle("Lista de estudiantes");
+			$this->pdf->SetLeftMargin(15);
+			$this->pdf->SetRightMargin(15);
+			$this->pdf->SetFillColor(210,210,210);
+			$this->pdf->SetFont('Arial','B',11);
+			$this->pdf->Cell(30);
+			$this->pdf->Cell(120,10,'LISTA DE ESTUDIANTES',0,0,'C',1);
+			$this->pdf->Ln(10);
+
+			$this->pdf->Cell(9,5,'No.','TBLR',0,'L',0);
+			$this->pdf->Cell(50,5,'NOMBRE','TBLR',0,'L',0);
+			$this->pdf->Cell(50,5,'PRIMER APELLIDO','TBLR',0,'L',0);
+			$this->pdf->Cell(50,5,'SEGUNDO APELLIDO','TBLR',0,'L',0);
+			$this->pdf->Cell(15,5,'NOTA','TBLR',0,'L',0);
+			$this->pdf->Ln(5);
+
+			$this->pdf->SetFont('Arial','',9);
+			$num=1;
+			foreach ($lista as $row) {
+				$nombre=$row->nombre;
+				$primerapellido=$row->primerApellido;
+				$segundoapellido=$row->segundoApellido;
+				$nota=$row->nota;
+				$this->pdf->Cell(9,5,$num,'TBLR',0,'L',0);
+				$this->pdf->Cell(50,5,$nombre,'TBLR',0,'L',0);
+				$this->pdf->Cell(50,5,$primerapellido,'TBLR',0,'L',0);
+				$this->pdf->Cell(50,5,$segundoapellido,'TBLR',0,'L',0);
+				$this->pdf->Cell(15,5,$nota,'TBLR',0,'L',0);
+				$this->pdf->Ln(5);
+				$num++;
+			}
+
+			$this->pdf->Output("listaestudiantes.pdf","I");
+
+		}
+		else
+		{
+			redirect('usuarios/panel','refresh');
+		}
+	}
 }
