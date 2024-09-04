@@ -1,0 +1,41 @@
+.colordefondo {
+    background-image: url('/proyectoelibrococha/codeigniter/template/dist/img/portada.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; /* Ajusta la altura al 100% del viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-box {
+    margin-left: -40px; /* Ajusta este valor según lo que necesites */
+    transform: translateX(-260px); /* Ajusta este valor según lo que necesites */
+    background-color: #b57506; /* Beige o crema, ajusta según el color que elijas */
+    padding: 20px; /* Añade un poco de padding para que el contenido no esté pegado a los bordes */
+    border-radius: 8px; /* Añade bordes redondeados para un aspecto más suave */
+  }
+  .login-logo a {
+    font-family: 'Georgia', serif;
+    font-weight: 900; /* Aumenta el grosor del texto (700 es negrita) */
+    font-size: 2rem; /* Ajusta el tamaño de la fuente (puedes cambiar el valor según lo necesites) */
+    color: hsl(50, 84%, 80%); /* Ajusta el color del texto si es necesario */
+}
+/* Establecer los colores para el botón */
+.btn-custom {
+    background-color: #c97815; /* Color de fondo (café) */
+    color:hsl(50, 84%, 80%); /* Color del texto (dorada) */
+    font-weight: 700; /* Negrita */
+  }
+  
+  .btn-custom:hover {
+    background-color: hsl(50, 84%, 80%); /* Color de fondo en hover (café más oscuro) */
+    color: #c97815; /* Color del texto en hover (blanco) */
+  }
+  .fondo {
+    background-color: hsl(50, 84%, 80%); /* Color de fondo del cuadro de login */
+    border: none; /* Opcional: Eliminar el borde si lo deseas */
+    border-radius: 8px; /* Opcional: Ajustar el radio del borde para esquinas redondeadas */
+  }
+
+
