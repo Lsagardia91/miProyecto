@@ -30,12 +30,11 @@ class Libros_controlador extends CI_Controller {
 		  'min_length'=>'Por lo menos 5 caracteres',
        'max_length'=>'Maximo 30 caracteres en titulo de libro'));
 
-		
-    $this->form_validation->set_rules('autorv','Autor',
-		'required|min_length[5]|max_length[20]',
-    array('required'=>'Se requiere el autor',
-		'min_length'=>'Por lo menos 5 caracteres',
-    'max_length'=>'Maximo 20 caracteres en nombre de autor'));
+   $this->form_validation->set_rules('isbnv', 'ISBN', 'required', 
+     array(
+        'required' => 'Se requiere el ISBN'
+    ));
+  
 
     if($this->form_validation->run()==FALSE)
 		{
@@ -47,14 +46,14 @@ class Libros_controlador extends CI_Controller {
     {
     $this->load->model('Libros_model');
     $data['titulo']=strtoupper($_POST['titulov']);
-    $data['autor']=strtoupper($_POST['autorv']);
     $data['isbn']=($_POST['isbnv']);
-    $data['anioPublicacion']=$_POST['anioPublicacionv'];
-    $data['categoria']=strtoupper($_POST['categoriav']);
     $data['ubicacion']=strtoupper($_POST['ubicacionv']);
-    $data['editorial']=strtoupper($_POST['editorialv']);
-    $data['dewey']=strtoupper($_POST['deweyv']);
-    $data['cutter']=strtoupper($_POST['cutterv']);
+    $data['codigocutter']=strtoupper($_POST['codigocutterv']);
+    $data['fechacreacion']=date('Y-m-d H:i:s');
+    $data['usuariocreador']=$this->session->userdata('login');
+    $data['categoria_id']=strtoupper($_POST['categoria_idv']);
+    $data['editorial_id']=$_POST['editorial_idv'];
+   
 
     $this->Libros_model->agregarlibro($data);
     redirect('Libros_controlador/m_listar','refresh');//REDIRECIONA
@@ -63,16 +62,16 @@ class Libros_controlador extends CI_Controller {
   public function eliminarbd()
   {
     $this->load->model('Libros_model');
-    $idLibro=$_POST['idlibro'];
-    $this->Libros_model->eliminarlibro($idLibro);
+    $id=$_POST['idlibro'];
+    $this->Libros_model->eliminarlibro($id);
     redirect('Libros_controlador/m_listar','refresh');//REDIRECIONA
   }
   public function modificar()
   {
     $this->load->model('Libros_model');
-    $idLibro=$_POST['idlibro'];
+    $id=$_POST['idlibro'];
     //echo $idlibro;
-	  $data['infolibro']=$this->Libros_model->recuperarlibro($idLibro);
+	  $data['infolibro']=$this->Libros_model->recuperarlibro($id);
     $this->load->view('inc/header');
     $this->load->view('modificar_libro',$data);
     $this->load->view('inc/footer');
@@ -80,18 +79,16 @@ class Libros_controlador extends CI_Controller {
 	public function modificarbd()
 	{
     $this->load->model('Libros_model');
-	  $idLibro=$_POST['idlibro'];
+	  $id=$_POST['idlibro'];
     $data['titulo']=strtoupper($_POST['titulov']);
-    $data['autor']=strtoupper($_POST['autorv']);
     $data['isbn']=($_POST['isbnv']);
-    $data['anioPublicacion']=$_POST['anioPublicacionv'];
-    $data['categoria']=strtoupper($_POST['categoriav']);
     $data['ubicacion']=strtoupper($_POST['ubicacionv']);
-    $data['editorial']=strtoupper($_POST['editorialv']);
-    $data['dewey']=strtoupper($_POST['deweyv']);
-    $data['cutter']=strtoupper($_POST['cutterv']);
+    $data['codigocutter']=strtoupper($_POST['codigocutterv']);
+    $data['ultimaactualizacion']=date('Y-m-d H:i:s');
+    $data['categoria_id']=strtoupper($_POST['categoria_idv']);
+    $data['editorial_id']=$_POST['editorial_idv'];
 
-		$this->Libros_model->modificarlibro($idLibro,$data);
+		$this->Libros_model->modificarlibro($id,$data);
 		redirect('Libros_controlador/m_listar','refresh');
 	}
   public function listapdf()
@@ -157,6 +154,7 @@ class Libros_controlador extends CI_Controller {
 		//	redirect('Libros_controlador/lista_libros','refresh');
 		//}
 	}
+  // DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //  // DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //
   public function registrar()
 	{
 		//if($this->session->userdata('tipo')=='admin')
@@ -177,7 +175,7 @@ class Libros_controlador extends CI_Controller {
 	public function registrarbd()
 	{
     $this->load->model('Registrarlibro_model');
-	$data['titulo']=strtoupper($_POST['titulov']);
+	  $data['titulo']=strtoupper($_POST['titulov']);
     $data['autor']=strtoupper($_POST['autorv']);
     $data['isbn']=($_POST['isbnv']);
     $data['anioPublicacion']=$_POST['anioPublicacionv'];

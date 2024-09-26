@@ -4,22 +4,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Usuarios_controlador extends CI_Controller {
 
   public function index()
-	{
-		if($this->session->userdata('rol')=='administrador')
-		{ 
-			$lista=$this->Usuarios_model->listadeusuarios();
-			$data['usuario']=$lista;
-			
-			$this->load->view('inc/header');
-			$this->load->view('lista_usuarios',$data);
-			$this->load->view('inc/footer');
-		}
-		else
-		{
-	 	redirect('Usuarios_controlador/m_listar','refresh');
-		}
-	}
+{
+    if($this->session->userdata('tipo') == 1)
+    { 
+        $lista = $this->Usuarios_model->listadeusuarios();
+        $data['usuario'] = $lista;
+        
+        $this->load->view('inc/header');
+        $this->load->view('lista_usuarios', $data);
+        $this->load->view('inc/footer');
+    }
+    else
+    {
+        redirect('Username/panel', 'refresh');
+    }
+}
 
+public function bibliotecario()
+{
+    if($this->session->userdata('tipo') == 'bibliotecario')
+    { 
+        $this->load->view('inc/header');
+        $this->load->view('panelbibliotecario');
+        $this->load->view('inc/footer');
+    }
+    else
+    {
+        redirect('Usuarios_controlador/m_listar', 'refresh'); // Redirigir si no es bibliotecario
+    }
+}
+
+public function lector()
+{
+    if($this->session->userdata('tipo') == 'lector')
+    { 
+        $this->load->view('inc/header');
+        $this->load->view('panellector'); // Asegúrate de que esta vista existe
+        $this->load->view('inc/footer');
+    }
+    else
+    {
+        redirect('Usuarios_controlador/m_listar', 'refresh'); // Redirigir si no es lector
+    }
+}
     public function m_listar()
 	{
         $this->load->model('Usuarios_model'); // Cargar el modelo
@@ -42,17 +69,20 @@ class Usuarios_controlador extends CI_Controller {
     {
       //$this->load->model('Libros_model'); 
       $this->load->model('Usuarios_model');
+      $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
       $data['nombres']=strtoupper($_POST['nombresv']);
       $data['apellidos']=strtoupper($_POST['apellidosv']);
       $data['direccion']=strtoupper($_POST['direccionv']);
       $data['telefono']=strtoupper($_POST['telefonov']);
-      $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
-      $data['correoElectronico']=$_POST['correoElectronicov'];
-      $data['genero']=strtoupper($_POST['generov']);
-      $data['estado']=strtoupper($_POST['estadov']);
-      $data['userName']=$_POST['userNamev'];
+      $data['email']=$_POST['correoElectronicov'];
+      $data['coluniins']=$_POST['coluniinsv'];  
+      $data['username']=$_POST['userNamev'];
       $data['password']=sha1($_POST['passwordv']);
-      $data['rol']=strtoupper($_POST['rolv']);
+      $data['estado']=($_POST['estadov']);
+      $data['fechacreacion']=($_POST['fechacreacionv']);
+      $data['ultimaactualizacion']=($_POST['ultimaactualizacionv']);
+      $data['usuariocreador']=($_POST['usuariocreadorv']);
+      $data['tipousuario_id']=($_POST['tipousuario_idv']);
   
       $this->Usuarios_model->agregarusuario($data);
       redirect('Usuarios_controlador/m_listar','refresh');//REDIRECIONA
@@ -78,18 +108,21 @@ class Usuarios_controlador extends CI_Controller {
       public function modificarbd()
       {
       $this->load->model('Usuarios_model');
-      $idUsuario=$_POST['idUsuario'];
+      $id=$_POST['idUsuario'];
+      $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
       $data['nombres']=strtoupper($_POST['nombresv']);
       $data['apellidos']=strtoupper($_POST['apellidosv']);
       $data['direccion']=strtoupper($_POST['direccionv']);
       $data['telefono']=strtoupper($_POST['telefonov']);
-      $data['carnetIdentidad']=$_POST['carnetIdentidadv'];
-      $data['correoElectronico']=$_POST['correoElectronicov'];
-      $data['genero']=strtoupper($_POST['generov']);
-      $data['estado']=strtoupper($_POST['estadov']);
+      $data['email']=$_POST['correoElectronicov'];
+      $data['coluniins']=$_POST['coluniinsv'];  
       $data['username']=$_POST['userNamev'];
       $data['password']=sha1($_POST['passwordv']);
-      $data['rol']=strtoupper($_POST['rolv']);
+      $data['estado']=($_POST['estadov']);
+      $data['fechacreacion']=($_POST['fechacreacionv']);
+      $data['ultimaactualizacion']=($_POST['ultimaactualizacionv']);
+      $data['usuariocreador']=($_POST['usuariocreadorv']);
+      $data['tipousuario_id']=($_POST['tipousuario_idv']);
   
           $this->Usuarios_model->modificarusuario($idUsuario,$data);
           redirect('Usuarios_controlador/m_listar','refresh');

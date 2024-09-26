@@ -1,1 +1,12 @@
-http://localhost/elibrococha/codeigniter/index.php/usuarios/index
+http://localhost/elibrococha/index.php/Username/index
+
+
+
+
+
+
+
+
+como estas almacenando las contraseñas en la base de datos
+
+

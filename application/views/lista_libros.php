@@ -6,10 +6,11 @@
 <button type="button" class="btn btn-warning">CERRAR SESION</button>
 </a>
 <br>
+<!--// DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //-->
 <?php echo form_open_multipart('Libros_controlador/registrar'); ?>
         <button type="submit" name="buton2" class="btn btn-success">Registro de libro</button>
       <?php echo form_close(); ?>
-
+<!--// HASTA AQUI AQUI HICE LA TRANSACCION DE CATEGORIA //-->
 <br>
 <a href="<?php echo base_url(); ?>index.php/Username/panel">
 <button type="button" class="btn btn-warning">VOLVER</button>
@@ -38,14 +39,14 @@ echo date('Y/m/d H:i:s');
 	<thead>
 		<th>idLibro</th>
 		<th>Titulo</th>
-		<th>Autor</th>
 		<th>Isbn</th>
-		<th>Año de Publicación</th>
-		<th>Categoria</th>
-        <th>Ubicación</th>
-        <th>Editorial</th>
-        <th>Deway</th>
-        <th>Cutter</th>
+		<th>Ubicacion</th>
+		<th>Codigo Cutter</th>
+        <th>Fecha Creacion</th>
+        <th>Ultima Actualizacion</th>
+        <th>Usuario Creador</th>
+		<th>Categoria id</th>
+		<th>Editorial id</th>
         <th>Modificar</th>
         <th>Eliminar</th>
 	</thead>
@@ -58,21 +59,20 @@ echo date('Y/m/d H:i:s');
 		<tr>
 			<td><?php echo $contador;?></td>
 			<td><?php echo $row->titulo; ?></td>
-			<td><?php echo $row->autor; ?></td>
 			<td><?php echo $row->isbn; ?></td>
-            <td><?php echo $row->anioPublicacion; ?></td>
-            <td><?php echo $row->categoria; ?></td>
-            <td><?php echo $row->ubicacion; ?></td>
-            <td><?php echo $row->editorial; ?></td>
-            <td><?php echo $row->dewey; ?></td>
-            <td><?php echo $row->cutter ?></td>
-
+			<td><?php echo $row->ubicacion; ?></td>
+			<td><?php echo $row->codigocutter ?></td>
+            <td><?php echo $row->fechacreacion; ?></td>
+            <td><?php echo $row->ultimaactualizacion; ?></td>
+            <td><?php echo $row->usuariocreador; ?></td>
+            <td><?php echo $row->categoria_id; ?></td>
+			<td><?php echo $row->editorial_id; ?></td>
 
 			<td>
 			<?php
              echo form_open_multipart("Libros_controlador/modificar");
             ?>
-			<input type="hidden" name="idlibro" value="<?php echo $row->idLibro; ?>">
+			<input type="hidden" name="idlibro" value="<?php echo $row->id; ?>">
 			<button type=submit type="submit" class="btn btn-primary">Editar</button>
 	        <?php
             echo form_close();
@@ -83,7 +83,7 @@ echo date('Y/m/d H:i:s');
 			<?php
              echo form_open_multipart("Libros_controlador/eliminarbd");
             ?>
-			<input type="hidden" name="idlibro" value="<?php echo $row->idLibro; ?>">
+			<input type="hidden" name="idlibro" value="<?php echo $row->id; ?>">
 			<button type=submit type="submit" class="btn btn-danger">Eliminar</button>
 	        <?php
             echo form_close();

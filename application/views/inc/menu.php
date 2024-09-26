@@ -56,6 +56,24 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="<?php echo base_url('index.php/Autor_controlador/m_listar'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Lista Autores</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('index.php/Editorial_controlador/m_listar'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Lista de Editoriales</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('index.php/Categoria_controlador/m_listar'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Lista categoria</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="<?php echo base_url('index.php/Prestamo_controlador/m_listarprestamo'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Prestamos</p>

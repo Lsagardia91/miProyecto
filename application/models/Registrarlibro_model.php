@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Registrarlibro_model extends CI_Model {
-
+class Registrarlibro_model extends CI_Model { // DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //
+// DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //
 	public function listaCategorias()
 	{
 		$this->db->select('*'); // select *

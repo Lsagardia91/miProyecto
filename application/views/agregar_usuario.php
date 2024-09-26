@@ -15,6 +15,10 @@
                     <?php echo form_open_multipart("Usuarios_controlador/agregarbd"); ?>
                     <div class="card-body">
                         <div class="form-group">
+                            <label for="carnetIdentidad">Carnet de Identidad</label>
+                            <input type="text" class="form-control" id="carnetIdentidad" name="carnetIdentidadv" placeholder="Escribe el carnet de identidad" required>
+                        </div>
+                        <div class="form-group">
                             <label for="nombres">Nombres</label>
                             <input type="text" class="form-control" id="nombres" name="nombresv" placeholder="Escribe el nombre" required>
                         </div>
@@ -30,25 +34,14 @@
                             <label for="telefono">Teléfono</label>
                             <input type="text" class="form-control" id="telefono" name="telefonov" placeholder="Escribe el teléfono" required>
                         </div>
-                        <div class="form-group">
-                            <label for="carnetIdentidad">Carnet de Identidad</label>
-                            <input type="text" class="form-control" id="carnetIdentidad" name="carnetIdentidadv" placeholder="Escribe el carnet de identidad" required>
-                        </div>
+
                         <div class="form-group">
                             <label for="correoElectronico">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="correoElectronico" name="correoElectronicov" placeholder="Escribe tu correo electrónico" required>
+                            <input type="email" class="form-control" id="email" name="emailv" placeholder="Escribe tu correo electrónico" required>
                         </div>
                         <div class="form-group">
-                            <label for="genero">Género</label>
-                            <select class="form-control" id="genero" name="generov" required>
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="estado">Estado</label>
-                            <input type="text" class="form-control" id="estado" name="estadov" placeholder="Escribe el estado" required>
+                            <label for="estado">Colegio/Univ/Inst</label>
+                            <input type="text" class="form-control" id="coluniins" name="coluniinsv" placeholder="Escribe el estado" required>
                         </div>
                         <div class="form-group">
                             <label for="username">Usuario</label>
@@ -59,8 +52,12 @@
                             <input type="password" class="form-control" id="password" name="passwordv" placeholder="Escribe la contraseña" required>
                         </div>
                         <div class="form-group">
+                            <label for="estado">Estado</label>
+                            <input type="text" class="form-control" id="estado" name="estadov" placeholder="Escribe el estado" required>
+                        </div>
+                        <div class="form-group">
                             <label for="rol">Rol</label>
-                            <input type="text" class="form-control" id="rol" name="rolv" placeholder="Escribe el rol" required>
+                            <input type="text" class="form-control" id="tipousuario_id" name="tipousuario_idv" placeholder="Escribe el rol" required>
                         </div>
                     </div>
                     <!-- /.card-body -->
