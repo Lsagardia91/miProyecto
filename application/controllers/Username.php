@@ -67,94 +67,70 @@ class Username extends CI_Controller {
 
 public function index()
 {
-   $this->load->model('Username_model');
-   $data['msg']=$this->uri->segment(3);
+    $this->load->model('Username_model');
+    $data['msg'] = $this->uri->segment(3);
 
-   if($this->session->userdata('login'))
-   {
-      //el usr ya esta logueado
-      redirect('Username/panel','refresh');
-   }
-   else
-   {
-      //usuario no esta logueado
-      $this->load->view('inc/header');
-      $this->load->view('login',$data);
-      $this->load->view('inc/footer');
-   }
+    // Verificamos si el lector quiere acceder
+    if ($this->input->post('lector')) {
+        $this->session->set_userdata('rol', 'lector');
+        redirect('Username/panel', 'refresh');
+    }
+
+    // Verificamos si el usuario ya está logueado
+    if ($this->session->userdata('login')) {
+        redirect('Username/panel', 'refresh');
+    } else {
+        $this->load->view('inc/header');
+        $this->load->view('login', $data);
+        $this->load->view('inc/footer');
+    }
 }
 
 public function validarusuario()
 {
-   $this->load->model('Username_model');
-   $username=$_POST['username'];
-   $password=sha1($_POST['password']);
+    $this->load->model('Username_model');
+    $username = $this->input->post('username');
+    $password = sha1($this->input->post('password'));
 
-   $consulta=$this->Username_model->validar($username,$password);
+    $consulta = $this->Username_model->validar($username, $password);
 
-   if($consulta->num_rows()>0)
-   {
-      //tenemos una validacion efectiva
-      foreach ($consulta->result() as $row)
-      {
-         $this->session->set_userdata('idusuario',$row->id);
-         $this->session->set_userdata('username',$row->username);
-         $this->session->set_userdata('tipo',$row->tipousuario_id);
+    if ($consulta->num_rows() > 0) {
+        foreach ($consulta->result() as $row) {
+            $this->session->set_userdata('idusuario', $row->idusuario);
+            $this->session->set_userdata('username', $row->username);
+            $this->session->set_userdata('rol', $row->rol);
+            $this->session->set_userdata('login', TRUE); // Establecer login aquí
 
-         // Depuración
-         log_message('info', 'ID de usuario guardado en la sesión: ' . $row->id);
 
-         redirect('Username/panel','refresh');
-      }
-   }
-   else
-   {
-      //no hay validacion efectiva y redirigimos a login
-      redirect('Username/index/2','refresh');
-   }
+            redirect('Username/panel', 'refresh');
+        }
+    } else {
+        redirect('Username/index/2', 'refresh');
+    }
 }
 
 public function panel()
 {
-   if($this->session->userdata('username'))
-   {
-      // Verificamos el tipo de usuario
-      $tipo_usuario = $this->session->userdata('tipo');
-
-      if($tipo_usuario == 1) // Administrador
-      {
-         $this->load->view('catalogo'); // Aquí cargarías el panel completo del administrador
-      }
-      elseif($tipo_usuario == 2) // Bibliotecario
-      {
-         $this->load->view('panelbibliotecario'); // Panel donde puede agregar libros
-      }
-      elseif($tipo_usuario == 3) // Lector
-      {
-         $this->load->view('panellector'); // Panel donde solo puede ver la lista de libros
-      }
-      else
-      {
-         redirect('Username/index','refresh'); // Por si algo falla, redirigir al login
-      }
-   }
-   else
-   {
-      // Usuario no está logueado, lo redirigimos al login
-      redirect('Username/index/3','refresh');
-   }
+    if ($this->session->userdata('username')) {
+        $rol_usuario = $this->session->userdata('rol');
+       
+        if ($rol_usuario == 'administrador') {
+            $this->load->view('catalogo');
+        } elseif ($rol_usuario == 'bibliotecario') {
+            $this->load->view('panelbibliotecario');
+        } elseif ($rol_usuario == 'lector') {
+            $this->load->view('panellector'); // Aquí puedes cargar una vista para lectores
+        } else {
+            redirect('Username/index', 'refresh');
+        }
+    } else {
+        redirect('Username/index/3', 'refresh');
+    }
 }
 
 public function logout()
 {
-
-   $this->session->sess_destroy();
-   redirect('Username/index/1','refresh');
+    $this->session->sess_destroy();
+    redirect('Username/index/1', 'refresh');
 }
 }
-
-
-
-
-
-

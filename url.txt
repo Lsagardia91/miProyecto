@@ -10,3 +10,5 @@ http://localhost/elibrococha/index.php/Username/index
 como estas almacenando las contraseñas en la base de datos
 
 
+http://localhost/elibrococha/index.php/Lector_controlador/listalibros
+http://localhost/elibrococha/index.php/Lector_controlador/index

@@ -3,14 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Prestamo_model extends CI_Model {
 
-    public function listadeprestamos()
+    public function registrarPrestamo($libro_id)
     {
-        $this->db->select('*');
-        $this->db->from('pedidoprestamo');
-        return $this->db->get(); // devuelve resultado
-     }
-     public function agregarprestamo($data)
-     {
-         $this->db->insert('pedidoprestamo',$data);
-     }
+       $data = array(
+          'libro_id' => $libro_id, // Cambiado a 'libro_id'
+          'prestamo_id' => $this->session->userdata('idusuario'), // Usar la columna correcta 'prestamo_id'
+          'fechaprestamo' => date('Y-m-d H:i:s'),
+          'estado' => 'prestado'
+       );
+    
+       return $this->db->insert('libro_has_prestamo', $data);
     }
+    
+ }
+ 

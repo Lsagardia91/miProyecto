@@ -1,4 +1,12 @@
 
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" style="background-color: #ecffef">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3 align-items-center">
+            <!-- Título de la página -->
+            
 <h1>Lista de libros disponibles</h1>
 <br>
 
@@ -70,7 +78,7 @@ echo date('Y/m/d H:i:s');
 
 			<td>
 			<?php
-             echo form_open_multipart("Libros_controlador/modificar");
+             echo form_open_multipart("Libros_controlador/modificarbd");
             ?>
 			<input type="hidden" name="idlibro" value="<?php echo $row->id; ?>">
 			<button type=submit type="submit" class="btn btn-primary">Editar</button>
@@ -99,3 +107,4 @@ echo date('Y/m/d H:i:s');
 		?>
 	</tbody>
 </table>
+		</div>

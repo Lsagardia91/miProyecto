@@ -4,93 +4,214 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Libros_controlador extends CI_Controller {
 
     public function m_listar()
-	{
-        $this->load->model('Libros_model');
-        $listar=$this->Libros_model->listadelibros();
-        $data['libross']=$listar;
-        $this->load->view('inc/header');
-	      $this->load->view('inc/menu');
-        $this->load->view('lista_libros',$data);
-        $this->load->view('inc/footer');
-  }
-  public function agregar()
-  {
-       $this->load->view('inc/header');
-     //  $this->load->view('inc/menu');
-       $this->load->view('agregar_libro');
-       $this->load->view('inc/footer');
-  }
-  public function agregarbd()
-  {
-    $this->load->library('form_validation');
-    $this->form_validation->set_rules('titulov','Titulo de libro',
-		'required|min_length[5]|max_length[25]',
-    array(
-      'required'=>'Se requiere el titulo',
-		  'min_length'=>'Por lo menos 5 caracteres',
-       'max_length'=>'Maximo 30 caracteres en titulo de libro'));
-
-   $this->form_validation->set_rules('isbnv', 'ISBN', 'required', 
-     array(
-        'required' => 'Se requiere el ISBN'
-    ));
-  
-
-    if($this->form_validation->run()==FALSE)
-		{
-			  $this->load->view('inc/header');
-		    $this->load->view('agregar_libro');
-		    $this->load->view('inc/footer');
-		}
-		else
     {
-    $this->load->model('Libros_model');
-    $data['titulo']=strtoupper($_POST['titulov']);
-    $data['isbn']=($_POST['isbnv']);
-    $data['ubicacion']=strtoupper($_POST['ubicacionv']);
-    $data['codigocutter']=strtoupper($_POST['codigocutterv']);
-    $data['fechacreacion']=date('Y-m-d H:i:s');
-    $data['usuariocreador']=$this->session->userdata('login');
-    $data['categoria_id']=strtoupper($_POST['categoria_idv']);
-    $data['editorial_id']=$_POST['editorial_idv'];
-   
+        $this->load->model('Libros_model');
+        $listar = $this->Libros_model->listadelibros();
+        $data['libross'] = $listar;
+        $this->load->view('inc/header');
+        $this->load->view('inc/menu');
+        $this->load->view('lista_libros', $data);
+        $this->load->view('inc/footer');
+    }
 
-    $this->Libros_model->agregarlibro($data);
-    redirect('Libros_controlador/m_listar','refresh');//REDIRECIONA
-  }
+    public function agregar()
+    {
+        // Cargar modelos de categorías, editoriales y autores
+        $this->load->model('Categoria_model');
+        $this->load->model('Editorial_model');
+        $this->load->model('Autor_model');
+        
+        // Obtener datos de categorías, editoriales y autores
+        $data['categorias'] = $this->Categoria_model->listadecategorias();
+        $data['editoriales'] = $this->Editorial_model->listadeeditoriales();
+        $data['autores'] = $this->Autor_model->listadeautores();
+
+        // Cargar vista con los datos
+        $this->load->view('inc/header');
+        $this->load->view('agregar_libro', $data);
+        $this->load->view('inc/footer');
+    }
+
+    public function agregarbd()
+{
+    $this->load->library('form_validation');
+
+    // Reglas de validación
+    $this->form_validation->set_rules('titulov', 'Título de libro', 'required|min_length[5]|max_length[25]', 
+        array(
+            'required' => 'Se requiere el título',
+            'min_length' => 'Por lo menos 5 caracteres',
+            'max_length' => 'Máximo 25 caracteres en el título de libro'
+        )
+    );
+
+    $this->form_validation->set_rules('isbnv', 'ISBN', 'required', 
+        array('required' => 'Se requiere el ISBN')
+    );
+
+    $this->form_validation->set_rules('ubicacionv', 'Ubicación', 'required', 
+        array('required' => 'Se requiere la ubicación del libro')
+    );
+
+    $this->form_validation->set_rules('codigocutterv', 'Código Cutter', 'required', 
+        array('required' => 'Se requiere el código Cutter')
+    );
+
+    $this->form_validation->set_rules('categoria_idv', 'Categoría', 'required', 
+        array('required' => 'Se requiere seleccionar una categoría')
+    );
+
+    $this->form_validation->set_rules('editorial_idv', 'Editorial', 'required', 
+        array('required' => 'Se requiere seleccionar una editorial')
+    );
+
+    $this->form_validation->set_rules('autor_idv[]', 'Autores', 'required', 
+        array('required' => 'Se requiere seleccionar al menos un autor')
+    );
+
+    // Si la validación falla
+    if ($this->form_validation->run() == FALSE)
+    {
+        $this->agregar(); // Volver a cargar la vista con los datos
+    }
+    else
+    {
+        // Cargar modelo
+        $this->load->model('Libros_model');
+        
+        // Datos del libro
+        $data_libro = array(
+            'titulo' => strtoupper($this->input->post('titulov')),
+            'isbn' => $this->input->post('isbnv'),
+            'ubicacion' => strtoupper($this->input->post('ubicacionv')),
+            'codigocutter' => strtoupper($this->input->post('codigocutterv')),
+            'fechacreacion' => date('Y-m-d H:i:s'),
+            'usuariocreador' => $this->session->userdata('idusuario'), // ID del usuario logueado
+            'categoria_id' => $this->input->post('categoria_idv'),
+            'editorial_id' => $this->input->post('editorial_idv')
+        );
+
+        // Insertar libro y obtener ID del libro
+        $libro_id = $this->Libros_model->agregarlibro($data_libro);
+
+         // Obtener cantidad de ejemplares
+         $cantidad_ejemplares = $this->input->post('cantidad_ejemplares');
+
+        // Obtener autores seleccionados
+        $autores = $this->input->post('autor_idv'); // Asegúrate de que tu formulario tenga este campo
+
+        // Insertar la relación en la tabla intermedia `libro_has_autor`
+        if (!empty($autores)) {
+            foreach ($autores as $autor_id) {
+                $this->Libros_model->agregarAutorLibro($libro_id, $autor_id);
+            }
+        }
+        
+
+        // Redireccionar a la lista de libros
+        redirect('Libros_controlador/m_listar', 'refresh');
+    }
 }
-  public function eliminarbd()
-  {
-    $this->load->model('Libros_model');
-    $id=$_POST['idlibro'];
-    $this->Libros_model->eliminarlibro($id);
-    redirect('Libros_controlador/m_listar','refresh');//REDIRECIONA
-  }
-  public function modificar()
-  {
-    $this->load->model('Libros_model');
-    $id=$_POST['idlibro'];
-    //echo $idlibro;
-	  $data['infolibro']=$this->Libros_model->recuperarlibro($id);
-    $this->load->view('inc/header');
-    $this->load->view('modificar_libro',$data);
-    $this->load->view('inc/footer');
-  }
-	public function modificarbd()
-	{
-    $this->load->model('Libros_model');
-	  $id=$_POST['idlibro'];
-    $data['titulo']=strtoupper($_POST['titulov']);
-    $data['isbn']=($_POST['isbnv']);
-    $data['ubicacion']=strtoupper($_POST['ubicacionv']);
-    $data['codigocutter']=strtoupper($_POST['codigocutterv']);
-    $data['ultimaactualizacion']=date('Y-m-d H:i:s');
-    $data['categoria_id']=strtoupper($_POST['categoria_idv']);
-    $data['editorial_id']=$_POST['editorial_idv'];
 
-		$this->Libros_model->modificarlibro($id,$data);
-		redirect('Libros_controlador/m_listar','refresh');
-	}
+
+
+
+    public function eliminarbd()
+    {
+        $this->load->model('Libros_model');
+        $id = $_POST['idlibro'];
+        $this->Libros_model->eliminarlibro($id);
+        redirect('Libros_controlador/m_listar', 'refresh'); // Redirige a la lista
+    }
+
+    public function modificar($idlibro)
+    {
+        // Cargar modelos necesarios
+        $this->load->model('Libros_model');
+        $this->load->model('Categoria_model');
+        $this->load->model('Editorial_model');
+        $this->load->model('Autor_model');
+    
+        // Recuperar información del libro por ID
+        $data['infolibro'] = $this->Libros_model->recuperarlibro($idlibro);
+    
+        // Asegúrate de manejar el caso donde no se encuentra el libro
+        if ($data['infolibro']->num_rows() === 0) {
+            // Manejar el error (redirigir o mostrar un mensaje)
+            redirect('Libros_controlador/m_listar');
+            return;
+        }
+    
+        // Obtener listas de categorías, editoriales y autores
+        $data['categorias'] = $this->Categoria_model->listadecategorias();
+        $data['editoriales'] = $this->Editorial_model->listadeeditoriales();
+        $data['autores'] = $this->Autor_model->listadeautores();
+    
+        // Obtener los autores asociados al libro
+        $data['autoresSeleccionados'] = $this->Libros_model->obtener_autores_por_libro($idlibro);
+    
+        // Cargar la vista para modificar el libro
+        $this->load->view('inc/header');
+        $this->load->view('modificar_libro', $data);
+        $this->load->view('inc/footer');
+    }
+    
+    public function modificarbd()
+    {
+        $this->load->library('form_validation');
+    
+        // Establecer reglas de validación
+        $this->form_validation->set_rules('titulov', 'Título', 'required');
+        $this->form_validation->set_rules('isbnv', 'ISBN', 'required');
+        $this->form_validation->set_rules('ubicacionv', 'Ubicación', 'required');
+        // Agrega más reglas según sea necesario...
+    
+        if ($this->form_validation->run() == FALSE) {
+            // Si la validación falla, redirigir al formulario de modificar con errores
+            $idlibro = $this->input->post('idlibro'); // Asegúrate de obtener el ID del libro
+            $this->modificar($idlibro); // Redirigir al método modificar
+        } else {
+            // Cargar modelo
+            $this->load->model('Libros_model');
+    
+            // Datos del libro
+            $data_libro = array(
+                'titulo' => strtoupper($this->input->post('titulov')),
+                'isbn' => $this->input->post('isbnv'),
+                'ubicacion' => strtoupper($this->input->post('ubicacionv')),
+                'codigocutter' => strtoupper($this->input->post('codigocutterv')),
+                'categoria_id' => $this->input->post('categoria_idv'),
+                'editorial_id' => $this->input->post('editorial_idv'),
+                'ultimaactualizacion' => date('Y-m-d H:i:s') // No es necesario usuarioactualizador si no existe en la tabla
+            );
+    
+            // ID del libro a modificar
+            $idlibro = $this->input->post('idlibro');
+    
+            // Actualizar el libro
+            $this->Libros_model->modificarLibro($idlibro, $data_libro);
+    
+            // Obtener los autores seleccionados
+            $autores = $this->input->post('autor_idv');
+    
+            // Actualizar la relación en la tabla intermedia `libro_has_autor`
+            $this->Libros_model->eliminarAutoresLibro($idlibro); // Primero eliminamos las relaciones existentes
+    
+            if (!empty($autores)) {
+                foreach ($autores as $autor_id) {
+                    $this->Libros_model->agregarAutorLibro($idlibro, $autor_id); // Añadir los nuevos autores
+                }
+            }
+    
+            // Mensaje de éxito
+            $this->session->set_flashdata('success', 'El libro se ha modificado correctamente.');
+    
+            // Redireccionar a la lista de libros
+            redirect('Libros_controlador/m_listar', 'refresh');
+        }
+    }
+    
+
   public function listapdf()
 	{
     $this->load->model('Libros_model');

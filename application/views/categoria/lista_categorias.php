@@ -1,5 +1,5 @@
 
-<h1>Lista de autores</h1>
+<h1>Lista de categoria</h1>
 <br>
 
 <a href="<?php echo base_url(); ?>index.php/Username/logout">
@@ -32,13 +32,14 @@
 echo date('Y/m/d H:i:s');
 ?>-->
     <br>
-    <a href="<?php echo base_url();?>index.php/Autor_controlador/agregar">
-    <button type="button" class="btn btn-primary">AGREGAR AUTOR</button>
+    <a href="<?php echo base_url();?>index.php/Categoria_controlador/agregar">
+    <button type="button" class="btn btn-primary">AGREGAR CATEGORIA</button>
     </a>
     <table class="table">
 	<thead>
-		<th>idAutor</th>
-		<th>Nombre Autor</th>
+		<th>idCategoria</th>
+		<th>Nombre Categoria</th>
+		<th>Codigo Dewey</th>
         <th>Fecha Creacion</th>
         <th>Ultima Actualizacion</th>
         <th>Usuario Creador</th>
@@ -48,12 +49,13 @@ echo date('Y/m/d H:i:s');
     <tbody>
 		<?php
 		$contador=1;
-		foreach($autoress as $row)
+		foreach($categoriass as $row)
 		{
 		?>
 		<tr>
 			<td><?php echo $contador;?></td>
-			<td><?php echo $row->nombreautor; ?></td>
+			<td><?php echo $row->nombrecategoria; ?></td>
+			<td><?php echo $row->codigodewey; ?></td>
 			<td><?php echo $row->fechacreacion; ?></td>
 			<td><?php echo $row->ultimaactualizacion; ?></td>
 			<td><?php echo $row->usuariocreador ?></td>
@@ -61,9 +63,9 @@ echo date('Y/m/d H:i:s');
 
 			<td>
 			<?php
-             echo form_open_multipart("Autor_controlador/modificar");
+             echo form_open_multipart("Categoria_controlador/modificar");
             ?>
-			<input type="hidden" name="idautor" value="<?php echo $row->id; ?>">
+			<input type="hidden" name="idcategoria" value="<?php echo $row->id; ?>">
 			<button type=submit type="submit" class="btn btn-primary">Editar</button>
 	        <?php
             echo form_close();
@@ -72,9 +74,9 @@ echo date('Y/m/d H:i:s');
 
 			<td>
 			<?php
-             echo form_open_multipart("Autor_controlador/eliminarbd");
+             echo form_open_multipart("Categoria_controlador/eliminarbd");
             ?>
-			<input type="hidden" name="idautor" value="<?php echo $row->id; ?>">
+			<input type="hidden" name="idcategoria" value="<?php echo $row->id; ?>">
 			<button type=submit type="submit" class="btn btn-danger">Eliminar</button>
 	        <?php
             echo form_close();

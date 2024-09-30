@@ -26,14 +26,13 @@
         <thead>
           <tr>
             <th scope="col">#</th>
+            <th scope="col">Carnet Identidad</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">direccion</th>
-            <th scope="col">telefono</th>
-            <th scope="col">Carnet Identidad</th>
+            <th scope="col">telefono</th>    
             <th scope="col">Correo Electronico</th>
-            <th scope="col">Genero</th>
-            <th scope="col">Estado</th>
+            <th scope="col">Cole/Uni/Inst</th>
             <th scope="col">Username</th>
             <th scope="col">Password</th>
             <th scope="col">rol</th>
@@ -49,14 +48,13 @@
         ?>
           <tr>
             <th scope="row"><?php echo $indice; ?></th>
+            <td><?php echo $row->carnetidentidad; ?></td>
             <td><?php echo $row->nombres; ?></td>
             <td><?php echo $row->apellidos; ?></td>
             <td><?php echo $row->direccion; ?></td>
-            <td><?php echo $row->telefono; ?></td>
-            <td><?php echo $row->carnetIdentidad; ?></td>
-            <td><?php echo $row->correoElectronico; ?></td>
-            <td><?php echo $row->genero; ?></td>
-            <td><?php echo $row->estado; ?></td>
+            <td><?php echo $row->telefono; ?></td>    
+            <td><?php echo $row->email; ?></td>
+            <td><?php echo $row->coluniins; ?></td>
             <td><?php echo $row->username; ?></td>
             <td><?php echo $row->password; ?></td>
             <td><?php echo $row->rol; ?></td>
@@ -64,7 +62,7 @@
 
               
               <?php echo form_open_multipart("Usuarios_controlador/habilitarbd"); ?>
-              <input type="hidden" name="idUsuario" value="<?php echo $row->idUsuario; ?>">
+              <input type="hidden" name="idusuario" value="<?php echo $row->id; ?>">
               <input type="submit" name="buttonz" value="Habilitar" class="btn btn-warning">
               <?php echo form_close(); ?>
               

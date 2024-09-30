@@ -10,13 +10,13 @@
                         <h3 class="card-title">Agregar Usuario</h3>
                     </div>
                     <!-- /.card-header -->
-                    
+
                     <!-- form start -->
                     <?php echo form_open_multipart("Usuarios_controlador/agregarbd"); ?>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="carnetIdentidad">Carnet de Identidad</label>
-                            <input type="text" class="form-control" id="carnetIdentidad" name="carnetIdentidadv" placeholder="Escribe el carnet de identidad" required>
+                            <label for="carnetIentidad">Carnet de Identidad</label>
+                            <input type="text" class="form-control" id="carnetidentidad" name="carnetidentidadv" placeholder="Escribe el carnet de identidad" required>
                         </div>
                         <div class="form-group">
                             <label for="nombres">Nombres</label>
@@ -45,19 +45,27 @@
                         </div>
                         <div class="form-group">
                             <label for="username">Usuario</label>
-                            <input type="text" class="form-control" id="username" name="userNamev" placeholder="Escribe el usuario" required>
+                            <input type="text" class="form-control" id="username" name="usernamev" placeholder="Escribe el usuario" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Contraseña</label>
                             <input type="password" class="form-control" id="password" name="passwordv" placeholder="Escribe la contraseña" required>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="estado">Estado</label>
-                            <input type="text" class="form-control" id="estado" name="estadov" placeholder="Escribe el estado" required>
+                           <label for="rol">Rol</label>
+                          <select class="form-control" id="rol" name="rolv">
+                          <option value="administrador">Administrador</option>
+                          <option value="bibliotecario">Bibliotecario</option>
+                          </select>
                         </div>
+
+                        <!-- Nuevo campo para la foto del usuario -->
                         <div class="form-group">
-                            <label for="rol">Rol</label>
-                            <input type="text" class="form-control" id="tipousuario_id" name="tipousuario_idv" placeholder="Escribe el rol" required>
+                            <label for="foto">Foto del Usuario</label>
+                            
+                        <input type="hidden" class="form-control" name="idusuario" value="<?php echo $arrayidusuario;?>">
+                        <input type="file" name="userfile">
                         </div>
                     </div>
                     <!-- /.card-body -->

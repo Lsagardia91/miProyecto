@@ -7,7 +7,7 @@ class Autor_model extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from('autor');
-        return $this->db->get(); // devuelve resultado
+        return $this->db->get()->result(); // devuelve resultado
      }
      public function agregarautor($data)
      {
