@@ -25,7 +25,7 @@ class Autor_controlador extends CI_Controller {
     $this->load->model('Autor_model');
     $data['nombreautor']=strtoupper($_POST['nombreautorv']);
     $data['fechacreacion']=date('Y-m-d H:i:s');
-    $data['usuariocreador'] = $this->session->userdata('idusuario'); // ID del usuario logueado
+    $data['idusuario'] = $this->session->userdata('idusuario'); // ID del usuario logueado
  
     $this->Autor_model->agregarautor($data);
     redirect('Autor_controlador/m_listar','refresh');//REDIRECIONA

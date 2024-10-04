@@ -72,7 +72,7 @@ echo date('Y/m/d H:i:s');
 			<td><?php echo $row->codigocutter ?></td>
             <td><?php echo $row->fechacreacion; ?></td>
             <td><?php echo $row->ultimaactualizacion; ?></td>
-            <td><?php echo $row->usuariocreador; ?></td>
+            <td><?php echo $row->idusuario; ?></td>
             <td><?php echo $row->categoria_id; ?></td>
 			<td><?php echo $row->editorial_id; ?></td>
 

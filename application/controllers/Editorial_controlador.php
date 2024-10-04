@@ -25,7 +25,7 @@ class Editorial_controlador extends CI_Controller {
     $this->load->model('Editorial_model');
     $data['nombreeditorial']=strtoupper($_POST['nombreeditorialv']);
     $data['fechacreacion']=date('Y-m-d H:i:s');
-    $data['usuariocreador'] = $this->session->userdata('idusuario'); // ID del usuario logueado
+    $data['idusuario'] = $this->session->userdata('idusuario'); // ID del usuario logueado
  
     $this->Editorial_model->agregareditorial($data);
     redirect('Editorial_controlador/m_listar','refresh');//REDIRECIONA

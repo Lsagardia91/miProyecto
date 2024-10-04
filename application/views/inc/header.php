@@ -75,6 +75,29 @@
           </form>
         </div>
       </li>
+      <!-- PARA EL USUARIO -->
+       <!-- User Account Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="fas fa-user"></i> <!-- Ícono de usuario -->
+          <span><?php echo $this->session->userdata('nombres'); ?></span> <!-- Mostrar nombre del usuario -->
+          <i class="fas fa-caret-down ml-1"></i> <!-- Ícono de desplegable -->
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a href="<?php echo base_url('index.php/Usuarios_controlador/modificardatosperfil'); ?>" class="dropdown-item">
+            <i class="fas fa-user-edit mr-2"></i> Actualizar Perfil
+          </a>
+          <a href="<?php echo base_url('index.php/Usuarios_controlador/cambiarcontrasena'); ?>" class="dropdown-item">
+            <i class="fas fa-key mr-2"></i> Cambiar Contraseña
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="<?php echo base_url('index.php/Login_controlador/cerrarsesion'); ?>" class="dropdown-item text-danger">
+            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+          </a>
+        </div>
+      </li>
+      <!-- End of User Account Dropdown -->
+       <!-- -----------PARA EL USUARIO -->
     </ul>
   </nav>
   <!-- /.navbar -->

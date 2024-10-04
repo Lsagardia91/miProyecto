@@ -58,7 +58,7 @@ echo date('Y/m/d H:i:s');
 			<td><?php echo $row->codigodewey; ?></td>
 			<td><?php echo $row->fechacreacion; ?></td>
 			<td><?php echo $row->ultimaactualizacion; ?></td>
-			<td><?php echo $row->usuariocreador ?></td>
+			<td><?php echo $row->idusuario ?></td>
        
 
 			<td>

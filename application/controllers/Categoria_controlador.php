@@ -26,7 +26,7 @@ class Categoria_controlador extends CI_Controller {
     $data['nombrecategoria']=strtoupper($_POST['nombrecategoriav']);
     $data['codigodewey']=strtoupper($_POST['codigodeweyv']);
     $data['fechacreacion']=date('Y-m-d H:i:s');
-    $data['usuariocreador'] = $this->session->userdata('idusuario'); // ID del usuario logueado
+    $data['idusuario'] = $this->session->userdata('idusuario'); // ID del usuario logueado
  
     $this->Categoria_model->agregarcategoria($data);
     redirect('Categoria_controlador/m_listar','refresh');//REDIRECIONA

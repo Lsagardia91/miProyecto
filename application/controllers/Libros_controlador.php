@@ -86,7 +86,7 @@ class Libros_controlador extends CI_Controller {
             'ubicacion' => strtoupper($this->input->post('ubicacionv')),
             'codigocutter' => strtoupper($this->input->post('codigocutterv')),
             'fechacreacion' => date('Y-m-d H:i:s'),
-            'usuariocreador' => $this->session->userdata('idusuario'), // ID del usuario logueado
+            'idusuario' => $this->session->userdata('idusuario'), // ID del usuario logueado
             'categoria_id' => $this->input->post('categoria_idv'),
             'editorial_id' => $this->input->post('editorial_idv')
         );

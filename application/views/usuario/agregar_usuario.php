@@ -14,6 +14,9 @@
                     <!-- form start -->
                     <?php echo form_open_multipart("Usuarios_controlador/agregarbd"); ?>
                     <div class="card-body">
+ 
+				
+			
                         <div class="form-group">
                             <label for="carnetIentidad">Carnet de Identidad</label>
                             <input type="text" class="form-control" id="carnetidentidad" name="carnetidentidadv" placeholder="Escribe el carnet de identidad" required>
@@ -62,11 +65,9 @@
 
                         <!-- Nuevo campo para la foto del usuario -->
                         <div class="form-group">
-                            <label for="foto">Foto del Usuario</label>
-                            
-                        <input type="hidden" class="form-control" name="idusuario" value="<?php echo $arrayidusuario;?>">
-                        <input type="file" name="userfile">
-                        </div>
+                        <label for="foto">Foto del Usuario</label>
+                        <input type="file" class="form-control" name="fotov" id="foto">
+                       </div>
                     </div>
                     <!-- /.card-body -->
 
