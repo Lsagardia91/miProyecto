@@ -67,24 +67,32 @@ class Username extends CI_Controller {
 
 public function index()
 {
-    $this->load->model('Username_model');
-    $data['msg'] = $this->uri->segment(3);
+     // Verificamos si la sesión de login está activa
+     if ($this->session->userdata('login')) {
+        $rol_usuario = $this->session->userdata('rol');
 
-    // Verificamos si el lector quiere acceder
-    if ($this->input->post('lector')) {
-        $this->session->set_userdata('rol', 'lector');
-        redirect('Username/panel', 'refresh');
-    }
+        // Depuración para saber qué rol está establecido
+        log_message('debug', 'Rol del usuario: ' . $rol_usuario);
 
-    // Verificamos si el usuario ya está logueado
-    if ($this->session->userdata('login')) {
-        redirect('Username/panel', 'refresh');
+        // Redirigir según el rol del usuario
+        if ($rol_usuario == 'administrador') {
+            $this->load->view('catalogo');
+        } elseif ($rol_usuario == 'bibliotecario') {
+            $this->load->view('panelbibliotecario');
+        } elseif ($rol_usuario == 'lector') {
+            $this->load->view('panellector');
+        } else {
+            // Si el rol no está reconocido, redirigimos al login
+            log_message('debug', 'Rol desconocido, redirigiendo a login');
+            redirect('Username/index', 'refresh');
+        }
     } else {
-        $this->load->view('inc/header');
-        $this->load->view('login', $data);
-        $this->load->view('inc/footer');
+        // Si no está logueado, redirigir al login
+        log_message('debug', 'Usuario no logueado, redirigiendo a login');
+        redirect('Username/index/3', 'refresh');
     }
-}
+    }
+
 
 public function validarusuario()
 {
@@ -111,19 +119,24 @@ public function validarusuario()
 
 public function panel()
 {
-    if ($this->session->userdata('username')) {
+    if ($this->session->userdata('login')) {
+        log_message('debug', 'Usuario logueado con rol: ' . $this->session->userdata('rol')); // Log para depurar
         $rol_usuario = $this->session->userdata('rol');
-       
+
+        // Cargar la vista correspondiente según el rol del usuario
         if ($rol_usuario == 'administrador') {
             $this->load->view('catalogo');
         } elseif ($rol_usuario == 'bibliotecario') {
             $this->load->view('panelbibliotecario');
         } elseif ($rol_usuario == 'lector') {
-            $this->load->view('panellector'); // Aquí puedes cargar una vista para lectores
+            $this->load->view('panellector');
         } else {
+            log_message('debug', 'Rol desconocido, redirigiendo a login');
             redirect('Username/index', 'refresh');
         }
     } else {
+        // Si no está logueado, redirigir al login (index/3)
+        log_message('debug', 'No hay sesión, redirigiendo a login');
         redirect('Username/index/3', 'refresh');
     }
 }

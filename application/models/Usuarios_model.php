@@ -54,9 +54,11 @@ class Usuarios_model extends CI_Model {
 	}
 	// PARA RECUPERAR CONTRASEÑA ////	// PARA RECUPERAR CONTRASEÑA ////
 	public function get_user_by_email($email) {
+		
 		// Asegurarse de que el correo electrónico no esté vacío antes de consultar
 		if (!empty($email)) {
-			return $this->db->get_where('tb_usuarios', ['email' => $email])->row_array();
+		
+			return $this->db->get_where('usuario', ['email' => $email])->row_array();
 		} else {
 			return false; // Retorna false si el correo electrónico está vacío
 		}
@@ -69,8 +71,8 @@ class Usuarios_model extends CI_Model {
 			);
 	
 			// Asegurarse de que el ID del usuario existe antes de actualizar
-			$this->db->where('id_usuario', $user_id);
-			return $this->db->update('tb_usuarios', $data); // Actualizar el token y expiración
+			$this->db->where('id', $user_id);
+			return $this->db->update('usuario', $data); // Actualizar el token y expiración
 		} else {
 			return false; // Retorna false si el ID de usuario o el token están vacíos
 		}
@@ -80,7 +82,7 @@ class Usuarios_model extends CI_Model {
 			// Definir la consulta para obtener el usuario por el token y asegurarse que no ha expirado
 			$this->db->where('token', $token);
 			$this->db->where('token_expiry >', date('Y-m-d H:i:s')); // Verificar que el token aún no ha expirado
-			$query = $this->db->get('tb_usuarios'); // Consulta a la tabla de usuarios
+			$query = $this->db->get('usuario'); // Consulta a la tabla de usuarios
 	
 			// Verificar si se encontró el usuario
 			if ($query->num_rows() > 0) {
@@ -94,22 +96,22 @@ class Usuarios_model extends CI_Model {
 	}
 	
 	public function get_user_id_by_email($email) {
-		$this->db->select('id_usuario'); // Selecciona solo el id_usuario
-		$this->db->from('tb_usuarios');
+		$this->db->select('id'); // Selecciona solo el id_usuario
+		$this->db->from('usuario');
 		$this->db->where('email', $email);
 		$query = $this->db->get();
 	
 		// Si se encuentra el usuario, retorna el id_usuario
 		if ($query->num_rows() > 0) {
-			return $query->row()->id_usuario;
+			return $query->row()->id;
 		} else {
 			return false; // Si no se encuentra, devuelve false
 		}
 	}
 	public function get_token_by_user_id($user_id) {
 		$this->db->select('token');
-		$this->db->from('tb_usuarios');
-		$this->db->where('id_usuario', $user_id);
+		$this->db->from('usuario');
+		$this->db->where('id', $user_id);
 		$this->db->where('token_expiry >', date('Y-m-d H:i:s')); // Verificar que el token no haya expirado
 		$query = $this->db->get();
 	
@@ -130,22 +132,41 @@ class Usuarios_model extends CI_Model {
 		);
 	
 		// Actualizar el usuario en la base de datos
-		$this->db->where('id_usuario', $user_id);
-		return $this->db->update('tb_usuarios', $data);
-	}// PARA RECUPERAR CONTRASEÑA ////	// PARA RECUPERAR CONTRASEÑA ////
+		$this->db->where('id', $user_id);
+		return $this->db->update('usuario', $data);
+	}
+	public function update_password($user_id, $hashed_password) {
+		$data = array(
+			'password' => $hashed_password,
+			'ultimaactualizacion' => date('Y-m-d H:i:s') // Fecha y hora actual
+		);
+		$this->db->where('id', $user_id);
+		return $this->db->update('usuario', $data);
+
+	}
+	
+	public function remove_token($user_id) {
+		$data = array(
+			'token' => null,
+			'token_expiry' => null
+		);
+		$this->db->where('id', $user_id);
+		return $this->db->update('usuario', $data);
+	}
 
     // PARA ACTUALIZAR DATOS DEL PERFIL//
-	public function obtener_usuario_por_id($id_usuario)
+	public function obtener_usuario_por_id($id)
 {
-    $this->db->where('id', $id_usuario);
+    $this->db->where('id', $id);
     $query = $this->db->get('usuario');
     return $query->row(); // Retornar solo una fila (el usuario)
 }
 
-public function actualizar_usuario($id_usuario, $data)
+public function actualizar_usuario($id, $data)
 {
-    $this->db->where('id', $id_usuario);
+    $this->db->where('id', $id);
     return $this->db->update('usuario', $data);
+
 }
 
 

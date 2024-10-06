@@ -1,12 +1,23 @@
-
-
-
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+require FCPATH.'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 date_default_timezone_set('America/La_Paz');
 
 class Usuarios_controlador extends CI_Controller {
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->load->model('Usuarios_model');
+      
+        $this->load->library('upload'); // Cargar la librería de carga
+    }
 
   public function index()
 {
@@ -287,57 +298,61 @@ public function lector()
 	}
 
   // RECUPARAR CONTRASEÑA//  // RECUPARAR CONTRASEÑA//
-  public function recuperarcontra() {
-    // Cargar la librería de validación de formularios
-    $this->load->library('form_validation');
+    public function recuperarcontra() {
+        // Cargar la librería de validación de formularios
+        $this->load->library('form_validation');
+        
+        // Establecer las reglas de validación para el campo de email
+        $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email');
     
-    // Establecer las reglas de validación para el campo de email
-    $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email');
-
-    // Verificar si el formulario ha sido enviado y validado
-    if ($this->form_validation->run() == FALSE) {
-        // Si no ha pasado la validación, mostrar la vista con los errores
-        $this->load->view('recuperarcont');
-    } else {
-        // Si la validación es exitosa, procesar el formulario
-        $email = $this->input->post('email');
-
-        // Verificar si el correo existe en la base de datos
-        $user = $this->Usuario_model->get_user_by_email($email);
-
-        if ($user) {
-            // Generar un token de restablecimiento de contraseña
-            $token = bin2hex(random_bytes(50));  // Genera un token aleatorio
-
-            // Guardar el token en la base de datos con el tiempo de expiración
-            if ($this->Usuario_model->store_reset_token($user['id_usuario'], $token)) {
-                // Crear el enlace de restablecimiento de contraseña
-                // Crear el enlace de restablecimiento de contraseña
-                $reset_link = site_url('usuarios/reset_password/' . urlencode($token));
-
-
-                // Configurar el envío del correo electrónico
-                $this->_send_reset_email($email, $reset_link);
-
-                // Mostrar mensaje de éxito
-                $this->session->set_flashdata('message', 'Se ha enviado un enlace para restablecer tu contraseña a tu correo.');
-            } else {
-                // Si hubo un problema al guardar el token
-                $this->session->set_flashdata('error', 'Hubo un problema al generar el token. Inténtalo nuevamente.');
-            }
+        // Verificar si el formulario ha sido enviado y validado
+        if ($this->form_validation->run() == FALSE) {
+            // Si no ha pasado la validación, mostrar la vista con los errores
+            $this->load->view('recuperarcont');
         } else {
-            // Si no se encuentra el correo, mostrar un mensaje de error
-            $this->session->set_flashdata('error', 'El correo electrónico no está registrado.');
-        }
+            // Si la validación es exitosa, procesar el formulario
+            $email = $this->input->post('email');
+    
+            // Verificar si el correo existe en la base de datos
+            $user = $this->Usuarios_model->get_user_by_email($email);
+    
+            if ($user) {
+                // Generar un token de restablecimiento de contraseña
+                $token = bin2hex(random_bytes(50));  // Genera un token aleatorio
+    
+                // Guardar el token en la base de datos con el tiempo de expiración
+                if ($this->Usuarios_model->store_reset_token($user['id'], $token)) {
+                    // Crear el enlace de restablecimiento de contraseña
+                    // Crear el enlace de restablecimiento de contraseña
+                    $reset_link = site_url('Usuarios_controlador/reset_password/' . urlencode($token));
 
-        // Redirigir a la vista de recuperación de contraseña (para mostrar el mensaje flash)
-        redirect('usuarios/recuperarcontra');
+    
+                    // Configurar el envío del correo electrónico
+                    $this->_send_reset_email($email, $reset_link);
+    
+                    // Mostrar mensaje de éxito
+                    $this->session->set_flashdata('message', 'Se ha enviado un enlace para restablecer tu contraseña a tu correo.');
+                } else {
+                    // Si hubo un problema al guardar el token
+                    $this->session->set_flashdata('error', 'Hubo un problema al generar el token. Inténtalo nuevamente.');
+                }
+            } else {
+                // Si no se encuentra el correo, mostrar un mensaje de error
+                $this->session->set_flashdata('error', 'El correo electrónico no está registrado.');
+            }
+    
+            // Redirigir a la vista de recuperación de contraseña (para mostrar el mensaje flash)
+            redirect('Usuarios_controlador/recuperarcontra');
+        }
     }
-}
+    
+
+
 
 
 
 private function _send_reset_email($email, $reset_link) {
+    $this->load->model('Usuarios_model');
     $mail = new PHPMailer(true);
     try {
 
@@ -395,51 +410,86 @@ private function _send_reset_email($email, $reset_link) {
 
 
 public function reset_password($token) {
+    $this->load->model('Usuarios_model');
 // Obtener el usuario asociado al token
-$user = $this->Usuario_model->get_user_by_token($token);
+$user = $this->Usuarios_model->get_user_by_token($token);
 
 if ($user) {
     // Si el token es válido, cargar la vista de formulario para restablecer la contraseña
     // Aquí, $user['id_usuario'] se puede usar si necesitas el id_usuario
     $data['token'] = $token;
-    $data['id_usuario'] = $user['id_usuario']; // Obtener el id_usuario
+    $data['id'] = $user['id']; // Obtener el id_usuario
     
     $this->load->view('reset_password_form', $data);
 } else {
     // Si el token no es válido o ha expirado, mostrar un mensaje de error
     $this->session->set_flashdata('error', 'El token es inválido o ha expirado.');
-    redirect('usuarios/recuperarcontra'); // Verifica que 'usuarios' sea el controlador correcto
+    redirect('Usuarios_controlador/recuperarcontra'); // Verifica que 'usuarios' sea el controlador correcto
 }
 }
+public function procesar_nueva_contrasena() {
+    $this->load->model('Usuarios_model');
+    $token = $this->input->post('token');
+    $new_password = $this->input->post('new_password');
+    $confirm_password = $this->input->post('confirm_password');
+
+    // Validar que las contraseñas coincidan
+    if ($new_password !== $confirm_password) {
+        $this->session->set_flashdata('error', 'Las contraseñas no coinciden.');
+        redirect('Usuarios_controlador/reset_password/' . $token);
+    }
+
+    // Verificar que el token sea válido y no haya expirado
+    $user = $this->Usuarios_model->get_user_by_token($token);
+
+    if ($user) {
+        // Actualizar la contraseña del usuario
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        $this->Usuarios_model->update_password($user['id'], $hashed_password);
+
+        // Limpiar el token después de usarlo
+        $this->Usuarios_model->clear_reset_token($user['id']);
+
+        // Mostrar mensaje de éxito
+        $this->session->set_flashdata('message', 'Tu contraseña ha sido restablecida exitosamente.');
+        redirect('Usuario/login');
+    } else {
+        $this->session->set_flashdata('error', 'El token es inválido o ha expirado.');
+        redirect('Usuarios_controlador/recuperarcontra');
+    }
+}
+
 
 
 // MODIFICAR DATOS PERSONALES 
 public function modificardatosperfil()
 {
+        $this->load->model('Usuarios_model');//CARGA EL MODELO
     /// Verificar si el usuario está logueado
     if (!$this->session->userdata('idusuario')) {
-        redirect('login'); // Redirigir al login si no está logueado
+       // redirect('login'); // Redirigir al login si no está logueado
     }
 
     // Obtener el ID del usuario logueado desde la sesión
-    $id_usuario = $this->session->userdata('idusuario');
-    var_dump($id_usuario); // Agregar esto para depuración
+    $id= $this->session->userdata('idusuario');
+    var_dump($id); // Agregar esto para depuración
 
     // Obtener los datos del usuario desde el modelo
-    $data['usuario'] = $this->Usuario_model->obtener_usuario_por_id($id_usuario);
+    $data['usuario'] = $this->Usuarios_model->obtener_usuario_por_id($id);
 
     // Cargar la vista de modificación de perfil con los datos del usuario
-    $this->load->view('modificardatosperfil', $data);
+    $this->load->view('usuario/modificardatosperfil', $data);
 }
 
 public function actualizar_perfil()
 {
+    $this->load->model('Usuarios_model');
     // Verificar si el usuario está logueado
     if (!$this->session->userdata('idusuario')) {
         redirect('login'); // Redirigir al login si no está logueado
     }
 
-    $id_usuario = $this->session->userdata('idusuario'); // ID del usuario logueado
+    $id = $this->session->userdata('idusuario'); // ID del usuario logueado
 
     // Validar los datos del formulario
     $this->form_validation->set_rules('nombres', 'Nombres', 'required');
@@ -448,28 +498,32 @@ public function actualizar_perfil()
 
     if ($this->form_validation->run() === FALSE) {
         // Volver a la vista de modificación si hay errores
-        $this->modificardatosperfil();
+        $this->modificardatosperfil(); // Llama a la vista con los datos del usuario
     } else {
         // Datos a actualizar
         $data = array(
-            'nombres' => $this->input->post('nombres'),
-            'apellidos' => $this->input->post('apellidos'),
-            'email' => $this->input->post('email'),
-            'direccion' => $this->input->post('direccion'),
-            'telefono' => $this->input->post('telefono'),
-            'idusuario' => $id_usuario // Asegúrate de incluir quién actualiza
+            'nombres' => $this->input->post('nombresv'),
+            'apellidos' => $this->input->post('apellidosv'),
+            'email' => $this->input->post('emailv'),
+            'direccion' => $this->input->post('direccionv'),
+            'telefono' => $this->input->post('telefonov'),
         );
 
         // Actualizar los datos en la base de datos
-        $this->Usuario_model->actualizar_usuario($id_usuario, $data);
+        $actualizado = $this->Usuarios_model->actualizar_usuario($id, $data);
 
-        // Redirigir o mostrar mensaje de éxito
-        redirect('Usuarios_controlador/perfil_actualizado'); // Verifica que esta ruta exista
+        // Verificar si la actualización fue exitosa
+        if ($actualizado) {
+            // Redirigir o mostrar mensaje de éxito
+            redirect('Usuarios_controlador/perfil_actualizado'); // Verifica que esta ruta exista
+        } else {
+            // Manejo de error en caso de que la actualización falle
+            $this->session->set_flashdata('error', 'No se pudo actualizar el perfil. Intente nuevamente.');
+            redirect('Usuarios_controlador/modificardatosperfil'); // Redirigir a la modificación
+        }
     }
 }
-
 }
-
 
 
 

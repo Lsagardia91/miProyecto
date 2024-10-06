@@ -45,15 +45,24 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
-          </div>
-          <!-- /.col -->
-          <div class="col-6">
-          <button type="submit" class="btn btn-custom btn-block">Iniciar Sesión</button>
-          </div>
-          <!-- /.col -->
-        </div>
+    <!-- Botón para Iniciar Sesión -->
+    <div class="col-6">
+        <!-- Aquí podrías añadir algún contenido o dejar la columna vacía para diseño -->
+    </div>
+    <div class="col-6 d-flex flex-column align-items-center">
+    <button type="submit" class="btn btn-custom btn-block mb-2">Iniciar Sesión</button>
+    <a href="<?php echo base_url(); ?>index.php/Usuarios_controlador/recuperarcontra" class="btn btn-custom btn-block">Recuperar Contraseña</a>
+</div>
+
+
+
+    <!-- /.col -->
+
+   
+</div>
+
       </form>
+      
       <!-- /.social-auth-links -->
     </div>
     <!-- /.login-card-body -->
