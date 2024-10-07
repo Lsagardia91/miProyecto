@@ -17,6 +17,7 @@ class Usuarios_controlador extends CI_Controller {
         $this->load->model('Usuarios_model');
       
         $this->load->library('upload'); // Cargar la librería de carga
+        $this->load->library('form_validation');
     }
 
   public function index()
@@ -39,7 +40,7 @@ class Usuarios_controlador extends CI_Controller {
     }
 }
 
-public function bibliotecario()
+/*public function bibliotecario()
 {
     if($this->session->userdata('tipo') == 'bibliotecario')
     { 
@@ -65,7 +66,7 @@ public function lector()
     {
         redirect('Usuarios_controlador/m_listar', 'refresh'); // Redirigir si no es lector
     }
-}
+}*/
     public function m_listar()
 	{
         $this->load->model('Usuarios_model'); // Cargar el modelo
@@ -308,7 +309,7 @@ public function lector()
         // Verificar si el formulario ha sido enviado y validado
         if ($this->form_validation->run() == FALSE) {
             // Si no ha pasado la validación, mostrar la vista con los errores
-            $this->load->view('recuperarcont');
+            $this->load->view('usuario/recuperarcont');
         } else {
             // Si la validación es exitosa, procesar el formulario
             $email = $this->input->post('email');
@@ -420,7 +421,7 @@ if ($user) {
     $data['token'] = $token;
     $data['id'] = $user['id']; // Obtener el id_usuario
     
-    $this->load->view('reset_password_form', $data);
+    $this->load->view('usuario/reset_password_form', $data);
 } else {
     // Si el token no es válido o ha expirado, mostrar un mensaje de error
     $this->session->set_flashdata('error', 'El token es inválido o ha expirado.');
@@ -444,7 +445,7 @@ public function procesar_nueva_contrasena() {
 
     if ($user) {
         // Actualizar la contraseña del usuario
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        $hashed_password = sha1($new_password);
         $this->Usuarios_model->update_password($user['id'], $hashed_password);
 
         // Limpiar el token después de usarlo
@@ -452,7 +453,7 @@ public function procesar_nueva_contrasena() {
 
         // Mostrar mensaje de éxito
         $this->session->set_flashdata('message', 'Tu contraseña ha sido restablecida exitosamente.');
-        redirect('Usuario/login');
+        redirect('Username/index');
     } else {
         $this->session->set_flashdata('error', 'El token es inválido o ha expirado.');
         redirect('Usuarios_controlador/recuperarcontra');
@@ -467,23 +468,29 @@ public function modificardatosperfil()
         $this->load->model('Usuarios_model');//CARGA EL MODELO
     /// Verificar si el usuario está logueado
     if (!$this->session->userdata('idusuario')) {
-       // redirect('login'); // Redirigir al login si no está logueado
+       redirect('login'); // Redirigir al login si no está logueado
     }
 
     // Obtener el ID del usuario logueado desde la sesión
     $id= $this->session->userdata('idusuario');
-    var_dump($id); // Agregar esto para depuración
+   //var_dump($id); // Agregar esto para depuración
 
     // Obtener los datos del usuario desde el modelo
     $data['usuario'] = $this->Usuarios_model->obtener_usuario_por_id($id);
 
-    // Cargar la vista de modificación de perfil con los datos del usuario
+// Verifica si se recuperó el usuario
+     if (!$data['usuario']) {
+   // echo "Usuario no encontrado"; // Mensaje para depuración
+    return; 
+    }// Detén la ejecución si no se encuentra el usuario
+   // Cargar la vista de modificación de perfil con los datos del usuario
     $this->load->view('usuario/modificardatosperfil', $data);
-}
 
+}
 public function actualizar_perfil()
 {
     $this->load->model('Usuarios_model');
+
     // Verificar si el usuario está logueado
     if (!$this->session->userdata('idusuario')) {
         redirect('login'); // Redirigir al login si no está logueado
@@ -492,21 +499,57 @@ public function actualizar_perfil()
     $id = $this->session->userdata('idusuario'); // ID del usuario logueado
 
     // Validar los datos del formulario
+    $this->form_validation->set_rules('carnetidentidad', 'Carnet de Identidad', 'required');
     $this->form_validation->set_rules('nombres', 'Nombres', 'required');
     $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
     $this->form_validation->set_rules('email', 'Correo Electrónico', 'required|valid_email');
+    $this->form_validation->set_rules('direccion', 'Dirección', 'required');
+    $this->form_validation->set_rules('telefono', 'Teléfono', 'required');
+    $this->form_validation->set_rules('coluniins', 'Colegio/Universidad/Instituto', 'required');
+    $this->form_validation->set_rules('username', 'Usuario', 'required');
 
     if ($this->form_validation->run() === FALSE) {
         // Volver a la vista de modificación si hay errores
-        $this->modificardatosperfil(); // Llama a la vista con los datos del usuario
+        $this->modificardatosperfil();
     } else {
+        // Configuración para la subida de la foto
+        $config['upload_path'] = './uploads/perfiles/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 2048; // Tamaño máximo del archivo en KB
+        $config['file_name'] = time() . '_' . $_FILES['foto']['name']; // Renombra el archivo para evitar duplicados
+
+            $this->load->library('upload', $config);
+
+             // Verificar si se subió una nueva foto
+        if (!empty($_FILES['foto']['name'])) {
+            if ($this->upload->do_upload('foto')) {
+                // Obtener la información del archivo subido
+                $foto_data = $this->upload->data();
+                $foto = $foto_data['file_name'];
+            } else {
+                // Si la subida falla, mostrar errores
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('Usuarios_controlador/modificardatosperfil');
+                return;
+            }
+        } else {
+            // Si no se subió una nueva foto, mantener la foto actual
+            $foto = $this->input->post('foto_actual');
+        }
+        
+
         // Datos a actualizar
         $data = array(
-            'nombres' => $this->input->post('nombresv'),
-            'apellidos' => $this->input->post('apellidosv'),
-            'email' => $this->input->post('emailv'),
-            'direccion' => $this->input->post('direccionv'),
-            'telefono' => $this->input->post('telefonov'),
+            'carnetidentidad' => $this->input->post('carnetidentidad'),
+            'nombres' => $this->input->post('nombres'),
+            'apellidos' => $this->input->post('apellidos'),
+            'email' => $this->input->post('email'),
+            'direccion' => $this->input->post('direccion'),
+            'telefono' => $this->input->post('telefono'),
+            'coluniins' => $this->input->post('coluniins'),
+            'username' => $this->input->post('username'),
+            'ultimaactualizacion' => date('Y-m-d H:i:s'),
+            'idusuario' => $this->session->userdata('idusuario')
         );
 
         // Actualizar los datos en la base de datos
@@ -515,20 +558,21 @@ public function actualizar_perfil()
         // Verificar si la actualización fue exitosa
         if ($actualizado) {
             // Redirigir o mostrar mensaje de éxito
-            redirect('Usuarios_controlador/perfil_actualizado'); // Verifica que esta ruta exista
+            $this->session->set_flashdata('success', 'Perfil actualizado correctamente.');
+            redirect('Usuarios_controlador/perfil_actualizado');
         } else {
             // Manejo de error en caso de que la actualización falle
             $this->session->set_flashdata('error', 'No se pudo actualizar el perfil. Intente nuevamente.');
-            redirect('Usuarios_controlador/modificardatosperfil'); // Redirigir a la modificación
+            redirect('Usuarios_controlador/modificardatosperfil');
         }
     }
 }
+
+public function perfil_actualizado()
+    {
+        // Cargar la vista de perfil actualizado
+        $this->load->view('usuario/perfil_actualizado');
+    }
+
+
 }
-
-
-
-  
-
-
-
-

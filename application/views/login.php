@@ -25,6 +25,19 @@
   <!-- /.login-logo -->
   <div class="card ">
     <div class="card-body login-card-body fondo">
+      <!-- Mostrar mensajes flash de error o éxito -->
+     <?php if ($this->session->flashdata('message')): ?>
+    <div class="alert alert-success">
+        <?php echo $this->session->flashdata('message'); ?>
+    </div>
+      <?php endif; ?>
+
+     <?php if ($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo $this->session->flashdata('error'); ?>
+    </div>
+     <?php endif; ?>
+
       <p class="login-box-msg">Ingresa tu usuario y contraseña</p>
 
         <?php echo form_open('username/validarusuario'); ?>

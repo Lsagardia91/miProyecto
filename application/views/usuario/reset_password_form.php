@@ -60,6 +60,12 @@
                 </div>
 
                 <!-- Mostrar mensajes de error -->
+                 <!-- Mostrar mensajes flash de éxito o error -->
+                <?php if ($this->session->flashdata('message')): ?>
+              <div class="alert alert-success text-center" role="alert">
+               <?php echo $this->session->flashdata('message'); ?>
+                </div>
+               <?php endif; ?>
                 <?php if ($this->session->flashdata('error')): ?>
                     <div class="alert alert-danger text-center" role="alert">
                         <?php echo $this->session->flashdata('error'); ?>
@@ -136,6 +142,8 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
 </body>
 </html>

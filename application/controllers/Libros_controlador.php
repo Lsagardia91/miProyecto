@@ -33,49 +33,49 @@ class Libros_controlador extends CI_Controller {
     }
 
     public function agregarbd()
-{
-    $this->load->library('form_validation');
+    {
+      $this->load->library('form_validation');
 
     // Reglas de validación
-    $this->form_validation->set_rules('titulov', 'Título de libro', 'required|min_length[5]|max_length[25]', 
+      $this->form_validation->set_rules('titulov', 'Título de libro', 'required|min_length[5]|max_length[25]', 
         array(
             'required' => 'Se requiere el título',
             'min_length' => 'Por lo menos 5 caracteres',
             'max_length' => 'Máximo 25 caracteres en el título de libro'
         )
-    );
+     );
 
-    $this->form_validation->set_rules('isbnv', 'ISBN', 'required', 
+     $this->form_validation->set_rules('isbnv', 'ISBN', 'required', 
         array('required' => 'Se requiere el ISBN')
-    );
+     );
 
-    $this->form_validation->set_rules('ubicacionv', 'Ubicación', 'required', 
+      $this->form_validation->set_rules('ubicacionv', 'Ubicación', 'required', 
         array('required' => 'Se requiere la ubicación del libro')
-    );
+     );
 
-    $this->form_validation->set_rules('codigocutterv', 'Código Cutter', 'required', 
+     $this->form_validation->set_rules('codigocutterv', 'Código Cutter', 'required', 
         array('required' => 'Se requiere el código Cutter')
-    );
+     );
 
-    $this->form_validation->set_rules('categoria_idv', 'Categoría', 'required', 
+     $this->form_validation->set_rules('categoria_idv', 'Categoría', 'required', 
         array('required' => 'Se requiere seleccionar una categoría')
-    );
+     );
 
-    $this->form_validation->set_rules('editorial_idv', 'Editorial', 'required', 
+     $this->form_validation->set_rules('editorial_idv', 'Editorial', 'required', 
         array('required' => 'Se requiere seleccionar una editorial')
-    );
+     );
 
-    $this->form_validation->set_rules('autor_idv[]', 'Autores', 'required', 
+     $this->form_validation->set_rules('autor_idv[]', 'Autores', 'required', 
         array('required' => 'Se requiere seleccionar al menos un autor')
-    );
+     );
 
-    // Si la validación falla
-    if ($this->form_validation->run() == FALSE)
-    {
+     // Si la validación falla
+     if ($this->form_validation->run() == FALSE)
+     {
         $this->agregar(); // Volver a cargar la vista con los datos
-    }
-    else
-    {
+     }
+     else
+       {
         // Cargar modelo
         $this->load->model('Libros_model');
         
@@ -111,10 +111,10 @@ class Libros_controlador extends CI_Controller {
         // Redireccionar a la lista de libros
         redirect('Libros_controlador/m_listar', 'refresh');
     }
+    
+
+
 }
-
-
-
 
     public function eliminarbd()
     {
@@ -274,7 +274,79 @@ class Libros_controlador extends CI_Controller {
 		//{
 		//	redirect('Libros_controlador/lista_libros','refresh');
 		//}
-	}
+	
+}
+public function agregarEjemplar() {
+    $libro_id = $this->input->post('libro_id'); // Asegúrate de que estás pasando el libro_id
+    $idusuario = $this->session->userdata('idUsuario');
+
+    if (!$this->Libros_model->verificarUsuario($idusuario)) { // Llamada al modelo
+        return ['success' => false, 'message' => 'Usuario no válido.'];
+    }
+
+    // Recupera el libro
+    $libro = $this->Libros_model->getLibro($libro_id);
+    if (!$libro) {
+        return ['success' => false, 'message' => 'Libro no encontrado.'];
+    }
+
+    $codigoCutter = $libro->codigocutter;
+    $categoria = $this->db->get_where('categoria', ['id' => $libro->categoria_id])->row();
+    $codigoDewey = $categoria->codigodewey;
+
+    // Obtener la cantidad de ejemplares desde el formulario
+    $cantidadEjemplares = $this->input->post('cantidad_ejemplares');
+
+    // Agregar ejemplares
+    for ($i = 0; $i < $cantidadEjemplares; $i++) {
+        $codigoEjemplar = $codigoCutter . '-' . $codigoDewey . '-' . uniqid();
+
+        $data = [
+            'codigoejemplar' => $codigoEjemplar,
+            'estado' => 1,
+            'fechacreacion' => date('Y-m-d H:i:s'),
+            'ultimaactualizacion' => date('Y-m-d H:i:s'),
+            'idusuario' => $idusuario,
+            'libro_id' => $libro_id
+        ];
+
+        $this->db->insert('ejemplar', $data);
+    }
+
+    return ['success' => true, 'message' => 'Ejemplares agregados correctamente.'];
+}
+
+public function procesarAgregarEjemplar() {
+    $libro_id = $this->input->post('libro_id'); // Obtener el ID del libro del formulario
+    $resultado = $this->agregarEjemplar(); // Llamar a la función agregarEjemplar
+
+    if ($resultado['success']) {
+        // Redirigir a la vista de ejemplares con un mensaje de éxito
+        $this->session->set_flashdata('message', $resultado['message']);
+        redirect('Libros_controlador/mostrarAgregarEjemplar/' . $libro_id); // Redirigir a la vista de agregar ejemplares
+    } else {
+        $this->session->set_flashdata('error', $resultado['message']);
+        redirect('Libros_controlador/mostrarAgregarEjemplar/' . $libro_id); // Redirigir a la misma vista para mostrar el error
+    }
+}
+
+public function mostrarAgregarEjemplar($libro_id) {
+    // Cargar modelo
+    $this->load->model('Libros_model');
+
+    // Recuperar el libro
+    $libro = $this->Libros_model->getLibro($libro_id);
+
+    // Recuperar los ejemplares existentes para el libro
+    $ejemplares = $this->Libros_model->getEjemplaresPorLibro($libro_id);
+
+    // Cargar la vista
+    $data['libro'] = $libro;
+    $data['ejemplar'] = $ejemplares;
+    $this->load->view('agregarejemplar', $data);
+}
+
+
   // DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //  // DESDE AQUI HICE LA TRANSACCION DE CATEGORIA //
   public function registrar()
 	{
@@ -314,3 +386,4 @@ class Libros_controlador extends CI_Controller {
 		redirect('Libros_controlador/m_listar','refresh');
 	}
 }
+

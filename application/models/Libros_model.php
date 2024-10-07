@@ -38,13 +38,13 @@ class Libros_model extends CI_Model {
         'libro_id' => $libro_id,
         'autor_id' => $autor_id
     );
-    $this->db->insert('libro_has_autor', $data);
+    $this->db->insert('libro_tiene_autor', $data);
 }
 public function obtener_autores_por_libro($id)
 {
     // Selecciona los autores asociados al libro
     $this->db->select('a.id, a.nombreautor');
-    $this->db->from('libro_has_autor la');
+    $this->db->from('libro_tiene_autor la');
     $this->db->join('autor a', 'la.autor_id = a.id');
     $this->db->where('la.libro_id', $id);
     
@@ -53,17 +53,64 @@ public function obtener_autores_por_libro($id)
 public function eliminarAutoresLibro($libro_id)
 {
     $this->db->where('libro_id', $libro_id);
-    $this->db->delete('libro_has_autor');
+    $this->db->delete('libro_tiene_autor');
 }
 public function agregarEjemplar($libro_id)
 {
+    // Obtén el ID del usuario de la sesión
+    $idusuario = $this->session->userdata('idUsuario');
+
+    // Asegúrate de que el ID de usuario existe en la tabla usuario
+    if (!$this->verificarUsuario($idusuario)) {
+        return ['success' => false, 'message' => 'Usuario no válido.']; // Manejo de error
+    }
+
+    // Recupera el libro
+    $libro = $this->db->get_where('libro', ['id' => $libro_id])->row();
+    if (!$libro) {
+        return ['success' => false, 'message' => 'Libro no encontrado.']; // Manejo de error
+    }
+
+    // Recupera el código del libro (cutter) y el código Dewey de la categoría del libro
+    $codigoCutter = $libro->codigocutter;
+    $categoria = $this->db->get_where('categoria', ['id' => $libro->categoria_id])->row();
+    $codigoDewey = $categoria->codigodewey;
+
+    // Generar el código del ejemplar
+    $codigoEjemplar = $codigoCutter . '-' . $codigoDewey . '-' . uniqid();
+
     $data = array(
-        'libro_id' => $libro_id,
-        // Puedes agregar otros campos como estado, fecha de creación, etc.
+        'codigoejemplar' => $codigoEjemplar,
+        'estado' => 1,
+        'fechacreacion' => date('Y-m-d H:i:s'),
+        'ultimaactualizacion' => date('Y-m-d H:i:s'),
+        'idusuario' => $idusuario,
+        'libro_id' => $libro_id
     );
 
-    $this->db->insert('ejemplares', $data);
+    // Insertar en la tabla ejemplar
+    $this->db->insert('ejemplar', $data);
+
+    // Devuelve un mensaje de éxito
+    return ['success' => true, 'message' => 'Ejemplar agregado correctamente.'];
 }
+public function getLibro($libro_id)
+{
+    return $this->db->get_where('libro', ['id' => $libro_id])->row();
+}
+
+public function getEjemplaresPorLibro($libro_id)
+{
+    return $this->db->get_where('ejemplar', ['libro_id' => $libro_id])->result();
+}
+
+
+    public function verificarUsuario($idusuario)
+    {
+        $usuario = $this->db->get_where('usuario', ['id' => $idusuario])->row();
+        return !empty($usuario);
+    }
+
 
 
 public function obtenerLibros()
@@ -87,7 +134,7 @@ public function registrarPrestamo($libro_id)
         'estado' => 'prestado', // Un campo que podría indicar el estado del préstamo
     ];
 
-    $this->db->insert('libro_has_prestamo', $data); // Inserta el préstamo en la tabla intermedia
+    $this->db->insert('libro_tiene_prestamo', $data); // Inserta el préstamo en la tabla intermedia
 
     $this->db->trans_complete();
 

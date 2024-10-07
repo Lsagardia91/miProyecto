@@ -74,15 +74,15 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('index.php/Prestamo_controlador/m_listarprestamo'); ?>" class="nav-link">
+              <a href="<?php echo base_url('index.php/Libros_controlador/agregarEjemplar'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Prestamos</p>
+                <p>Ejmplares</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="<?php echo base_url('template/pages/tables/jsgrid.html'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>...</p>
+                <p>Prestamos</p>
               </a>
             </li>
             <!-- Nueva Sección "Mi Cuenta" -->
