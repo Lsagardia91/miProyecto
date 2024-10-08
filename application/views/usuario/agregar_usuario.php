@@ -1,9 +1,97 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" style="background-color: #ecffef">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-12 align-items-center">
+            <!-- Título de la página -->
+
 <!-- Main content -->
+<section class="content">
+      <div class="container-fluid">
+        <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h3 class="card-title">Select2 (Default Theme)</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Minimal</label>
+                  <select class="form-control select2" style="width: 100%;">
+                    <option selected="selected">Alabama</option>
+                    <option>Alaska</option>
+                    <option>California</option>
+                    <option>Delaware</option>
+                    <option>Tennessee</option>
+                    <option>Texas</option>
+                    <option>Washington</option>
+                  </select>
+                </div>
+                <!-- /.form-group -->
+                <div class="form-group">
+                  <label>Disabled</label>
+                  <select class="form-control select2" disabled="disabled" style="width: 100%;">
+                    <option selected="selected">Alabama</option>
+                    <option>Alaska</option>
+                    <option>California</option>
+                    <option>Delaware</option>
+                    <option>Tennessee</option>
+                    <option>Texas</option>
+                    <option>Washington</option>
+                  </select>
+                </div>
+                <!-- /.form-group -->
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Multiple</label>
+                  <select class="select2" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
+                    <option>Alabama</option>
+                    <option>Alaska</option>
+                    <option>California</option>
+                    <option>Delaware</option>
+                    <option>Tennessee</option>
+                    <option>Texas</option>
+                    <option>Washington</option>
+                  </select>
+                </div>
+                <!-- /.form-group -->
+                
+                <!-- /.form-group -->
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            
+            <!-- /.row -->
+          </div>
+      
+        </div>
+      
+       
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <!-- left column -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
@@ -15,8 +103,8 @@
                     <?php echo form_open_multipart("Usuarios_controlador/agregarbd"); ?>
                     <div class="card-body">
  
-				
-			
+            <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="carnetIentidad">Carnet de Identidad</label>
                             <input type="text" class="form-control" id="carnetidentidad" name="carnetidentidadv" placeholder="Escribe el carnet de identidad" required>
@@ -25,6 +113,8 @@
                             <label for="nombres">Nombres</label>
                             <input type="text" class="form-control" id="nombres" name="nombresv" placeholder="Escribe el nombre" required>
                         </div>
+                    </div>
+            </div>
                         <div class="form-group">
                             <label for="apellidos">Apellidos</label>
                             <input type="text" class="form-control" id="apellidos" name="apellidosv" placeholder="Escribe los apellidos" required>
@@ -85,3 +175,4 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+</div>

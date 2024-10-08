@@ -1,4 +1,12 @@
 
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" style="background-color: #ecffef">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3 align-items-center">
+            <!-- Título de la página -->
 <h1>Editar Categoria</h1>
 <br>  
 <?php

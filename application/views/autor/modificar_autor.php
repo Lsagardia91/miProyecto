@@ -1,4 +1,5 @@
 
+            <!-- Título de la página -->
 <h1>Editar Autor</h1>
 <br>  
 <?php
