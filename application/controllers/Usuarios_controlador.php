@@ -259,8 +259,8 @@ public function lector()
 		$this->load->view('inc/header');
 		//$this->load->view('inc/vistaslte/menu');
 		$this->load->view('usuario/subirform',$data);
-    $this->load->view('inc/menu');
-    $this->load->view('inc/footer');
+        $this->load->view('inc/menu');
+       $this->load->view('inc/footer');
 	}
 	public function subir()
 	{

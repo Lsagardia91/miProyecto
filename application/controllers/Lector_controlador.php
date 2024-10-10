@@ -10,7 +10,7 @@ class Lector_controlador extends CI_Controller {
     // $data['libros'] = $this->Libros_model->obtenerLibros(); // Obtener libros
      $this->load->view('inicio');
      $this->load->view('inclectores/header');
-    // $this->load->view('lectores/panellector', $data);
+     //$this->load->view('lectores/panellector', $data);
      $this->load->view('inclectores/footer');
   }
 

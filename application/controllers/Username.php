@@ -67,9 +67,7 @@ class Username extends CI_Controller {
 
 public function index()
 {
-    $this->load->model('Username_model');
-    $data['msg'] = $this->uri->segment(3);
-
+   
     // Verificamos si el lector quiere acceder
     /*if ($this->input->post('lector')) {
         $this->session->set_userdata('rol', 'lector');
@@ -77,14 +75,27 @@ public function index()
     }*/
 
     // Verificamos si el usuario ya está logueado
-    if ($this->session->userdata('login')) {
-        redirect('Username/panel', 'refresh');
-    } else {
+
         $this->load->view('inc/header');
-        $this->load->view('login', $data);
+        $this->load->view('home');//login
         $this->load->view('inc/footer');
+    
     }
+    public function login()
+    {
+        // Verificamos si el usuario ya está logueado
+        if ($this->session->userdata('login')) {
+            // Si ya está logueado, redirigir al panel
+            redirect('Username/panel', 'refresh');
+        } else {
+            // Si no está logueado, mostrar la vista de login
+            $data['msg'] = $this->uri->segment(3);  // Para manejar mensajes
+            $this->load->view('inc/header');
+            $this->load->view('login', $data);  // Mostrar la vista login
+            $this->load->view('inc/footer');
+        }
     }
+
 
 
 public function validarusuario()
