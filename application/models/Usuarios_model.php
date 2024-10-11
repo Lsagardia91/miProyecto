@@ -168,6 +168,21 @@ public function actualizar_usuario($id, $data)
     return $this->db->update('usuario', $data);
 
 }
+public function buscarPorCI($carnetidentidad) {
+	$this->db->where('carnetidentidad', $carnetidentidad);
+	$query = $this->db->get('usuario');
+
+	if ($query->num_rows() > 0) {
+		return $query->row(); // Devolver el usuario si existe
+	} else {
+		return false; // No existe el usuario
+	}
+}
+
+public function insertarUsuario($data) {
+	$this->db->insert('usuario', $data);
+	return $this->db->insert_id(); // Retorna el ID del nuevo usuario
+}
 
 
 
