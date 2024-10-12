@@ -12,8 +12,14 @@ class Prestamo_controlador extends CI_Controller {
     // Cargar la vista para mostrar las solicitudes pendientes
     $this->load->view('bibliotecario/solicitudes_pendientes', $data);
 }
+public function prueba() {
+  echo "Esto es una prueba";
+  die();
+}
 public function procesarPrestamo($prestamo_id) {
   $this->load->model('Prestamo_model');
+  echo "Procesando préstamo con ID: " . $prestamo_id;
+  die(); // Esto debe mostrar el ID en la pantalla y detener la ejecución
 
   // Actualizar el préstamo para asignar el bibliotecario y cambiar el estado a "realizado"
   $data_update = array(

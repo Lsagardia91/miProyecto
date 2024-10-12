@@ -19,7 +19,7 @@
                     <td><?php echo $prestamo->titulo; ?></td>
                     <td><?php echo $prestamo->fechaprestamo; ?></td>
                     <td>
-                        <a href="<?php echo base_url('Prestamo_controlador/procesarPrestamo/' . $prestamo->id); ?>">
+                        <a href="<?php echo base_url('Prestamo_controlador/prueba/' . $prestamo->id); ?>">
                             Procesar Préstamo
                         </a>
                     </td>

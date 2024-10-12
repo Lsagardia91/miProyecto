@@ -80,7 +80,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('Prestamo_controlador/solicitudesPendientes'); ?>" class="nav-link">
+              <a href="<?php echo base_url('index.php/Prestamo_controlador/solicitudesPendientes'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Prestamos</p>
               </a>

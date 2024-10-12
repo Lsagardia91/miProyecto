@@ -37,9 +37,18 @@ class Prestamo_model extends CI_Model {
     $this->db->join('libro', 'libro_prestamo.libro_id = libro.id'); // Join con la tabla de libros
     $this->db->where('prestamo.estado', 0); // Solo préstamos pendientes
     $query = $this->db->get();
+      // Mostrar la consulta SQL generada
+      echo $this->db->last_query(); // Depuración: Muestra la consulta SQL generada
+    
 
     return $query->result();
   }
+  public function actualizarPrestamo($prestamo_id, $data_update) {
+    echo "Prestamo ID: " . $prestamo_id;
+    $this->db->where('id', $prestamo_id);
+    return $this->db->update('prestamo', $data_update); // Actualiza la tabla 'prestamo' con los datos proporcionados
+}
+
    
  }
  

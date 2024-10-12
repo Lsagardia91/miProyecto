@@ -37,7 +37,7 @@ class Lector_controlador extends CI_Controller {
       $lector = $this->Usuarios_model->buscarPorCI($ci_lector);
   
       if (!$lector) {
-          // Si no existe, crear nuevo usuario (lector)
+        ////  // Si no existe, crear nuevo usuario (lector)
           $data_usuario = array(
               'carnetidentidad' => $ci_lector,
               'nombres' => $nombre_lector,
@@ -47,10 +47,10 @@ class Lector_controlador extends CI_Controller {
               'ultimaactualizacion' => date('Y-m-d H:i:s'),
           );
   
-          // Insertar nuevo lector
+      //    // Insertar nuevo lector
           $usuario_id = $this->Usuarios_model->insertarUsuario($data_usuario);
       } else {
-          // Si existe, obtener el ID del usuario lector
+       //   // Si existe, obtener el ID del usuario lector
           $usuario_id = $lector->id;
       }
   
