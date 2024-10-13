@@ -85,32 +85,18 @@
                 <p>Prestamos</p>
               </a>
             </li>
-            <!-- Nueva Sección "Mi Cuenta" -->
-        <li class="nav-header">MI CUENTA</li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('index.php/Prestamo_controlador/librosPrestados'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Libros Prestados</p>
+              </a>
+            </li>
 
-<!-- Opción para Cambiar Contraseña -->
-<li class="nav-item">
-  <a href="<?php echo base_url('index.php/Usuarios_controlador/cambiar_contrasena'); ?>" class="nav-link">
-    <i class="nav-icon fas fa-key"></i>
-    <p>Cambiar Contraseña</p>
-  </a>
-</li>
 
-<!-- Opción para Modificar Datos Personales -->
-<li class="nav-item">
-  <a href="<?php echo base_url('index.php/Usuarios_controlador/modificar_datos_personales'); ?>" class="nav-link">
-    <i class="nav-icon fas fa-user-edit"></i>
-    <p>Modificar Datos Personales</p>
-  </a>
-</li>
 
-<!-- Opción para Cerrar Sesión -->
-<li class="nav-item">
-  <a href="<?php echo base_url('index.php/Login_controlador/cerrar_sesion'); ?>" class="nav-link text-danger">
-    <i class="nav-icon fas fa-sign-out-alt"></i>
-    <p>Cerrar Sesión</p>
-  </a>
-</li>
+
+
+
           </ul>
         </li>
       </ul>

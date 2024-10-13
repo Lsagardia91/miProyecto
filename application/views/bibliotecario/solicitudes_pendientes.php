@@ -1,7 +1,13 @@
 <h1>Solicitudes de Préstamo Pendientes</h1>
 
 <?php if (!empty($prestamos_pendientes)): ?>
-    <table>
+
+
+       <!-- Verifica qué datos estás obteniendo-->
+    <!--< ?php 
+var_dump($prestamos_pendientes);
+?> -->
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Lector</th>
@@ -12,16 +18,24 @@
             </tr>
         </thead>
         <tbody>
+   
+
+            
             <?php foreach ($prestamos_pendientes as $prestamo): ?>
                 <tr>
                     <td><?php echo $prestamo->nombres; ?></td>
                     <td><?php echo $prestamo->carnetidentidad; ?></td>
                     <td><?php echo $prestamo->titulo; ?></td>
-                    <td><?php echo $prestamo->fechaprestamo; ?></td>
+                    <td><?php echo date('d/m/Y H:i:s', strtotime($prestamo->fechaprestamo)); ?></td>
                     <td>
-                        <a href="<?php echo base_url('Prestamo_controlador/prueba/' . $prestamo->id); ?>">
-                            Procesar Préstamo
-                        </a>
+                        <?php echo form_open('Prestamo_controlador/procesarPrestamo'); ?>
+                            
+                        <input type="hidden" name="prestamo_id" value="<?php echo $prestamo->id; ?>">
+                            <button type="submit" class="btn btn-success" 
+                                onclick="return confirm('¿Estás seguro de que deseas procesar este préstamo?');">
+                                Procesar Préstamo
+                            </button>
+                        <?php echo form_close(); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

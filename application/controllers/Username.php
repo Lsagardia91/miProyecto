@@ -131,7 +131,7 @@ public function panel()
         if ($rol_usuario == 'administrador') {
             $this->load->view('catalogo');
         } elseif ($rol_usuario == 'bibliotecario') {
-            $this->load->view('panelbibliotecario');
+            $this->load->view('catalogo');
         } elseif ($rol_usuario == 'lector') {
             $this->load->view('panellector');
         } else {
