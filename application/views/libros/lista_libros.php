@@ -43,13 +43,17 @@ echo date('Y/m/d H:i:s');
     <a href="<?php echo base_url();?>index.php/Libros_controlador/agregar">
     <button type="button" class="btn btn-primary">AGREGAR LIBRO</button>
     </a>
+	<br>
+    <a href="<?php echo base_url();?>index.php/Libros_controlador/verificarlibroform">
+    <button type="button" class="btn btn-primary">VERIFICAR LIBRO</button>
+    </a>
     <table class="table">
 	<thead>
 		<th>idLibro</th>
 		<th>Titulo</th>
 		<th>Isbn</th>
 		<th>Ubicacion</th>
-		<th>Codigo Cutter</th>
+		<th>Codigor</th>
         <th>Fecha Creacion</th>
         <th>Ultima Actualizacion</th>
         <th>Usuario Creador</th>
@@ -69,7 +73,7 @@ echo date('Y/m/d H:i:s');
 			<td><?php echo $row->titulo; ?></td>
 			<td><?php echo $row->isbn; ?></td>
 			<td><?php echo $row->ubicacion; ?></td>
-			<td><?php echo $row->codigocutter ?></td>
+			<td><?php echo $row->codigocutterdewey ?></td>
             <td><?php echo $row->fechacreacion; ?></td>
             <td><?php echo $row->ultimaactualizacion; ?></td>
             <td><?php echo $row->idusuario; ?></td>

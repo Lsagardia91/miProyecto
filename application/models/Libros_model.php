@@ -55,62 +55,87 @@ public function eliminarAutoresLibro($libro_id)
     $this->db->where('libro_id', $libro_id);
     $this->db->delete('libro_tiene_autor');
 }
-public function agregarEjemplar($libro_id)
+public function agregarEjemplar($data)
 {
-    // Obtén el ID del usuario de la sesión
-    $idusuario = $this->session->userdata('idUsuario');
+    // Obtener el código de la categoría
+    $categoria = $this->db->get_where('categoria', ['id' => $data['categoria_id']])->row();
+    if (!$categoria) { 
+        return ['success' => false, 'message' => 'Categoría no encontrada.'];
+    }
+    
+    $codigoDewey = $categoria->codigodewey; // Obtén el código Dewey de la categoría
+    $numeroCategoria = str_pad($categoria->id, 2, '0', STR_PAD_LEFT); // Asegúrate de que el número de la categoría tenga al menos 2 dígitos
 
-    // Asegúrate de que el ID de usuario existe en la tabla usuario
-    if (!$this->verificarUsuario($idusuario)) {
-        return ['success' => false, 'message' => 'Usuario no válido.']; // Manejo de error
+    // Obtener la inicial del título
+    $inicialTitulo = substr($data['titulo'], 0, 1); // Inicial del título
+
+    // Obtener la inicial del autor
+    $inicialAutor = ''; // Inicial del autor
+    if (isset($data['autor_id'])) {
+        $autor = $this->db->get_where('autor', ['id' => $data['autor_id']])->row();
+        if ($autor) {
+            $inicialAutor = substr($autor->nombreautor, 0, 1); // Inicial del autor
+        }
     }
 
-    // Recupera el libro
-    $libro = $this->db->get_where('libro', ['id' => $libro_id])->row();
-    if (!$libro) {
-        return ['success' => false, 'message' => 'Libro no encontrado.']; // Manejo de error
+    // Generar el código base con inicial del título, inicial del autor, código Dewey y número de categoría
+    $codigoBase = strtoupper($inicialTitulo . $inicialAutor . $codigoDewey . $numeroCategoria);
+
+    // Verificar si el libro ya existe por ISBN
+    $libroExistente = $this->db->get_where('libro', ['isbn' => $data['isbn']])->row();
+
+    if ($libroExistente) {
+        // Si el libro ya existe, incrementar la cantidad de ejemplares
+        $this->db->where('id', $libroExistente->id);
+        $this->db->set('cantidadejemplares', 'cantidadejemplares + 1', FALSE); // Incrementar en 1
+        $this->db->update('libro');
+
+        return ['success' => true, 'message' => 'Ejemplar agregado correctamente.', 'libro_id' => $libroExistente->id];
     }
 
-    // Recupera el código del libro (cutter) y el código Dewey de la categoría del libro
-    $codigoCutter = $libro->codigocutter;
-    $categoria = $this->db->get_where('categoria', ['id' => $libro->categoria_id])->row();
-    $codigoDewey = $categoria->codigodewey;
+    // Obtener el último número usado para el mismo código base
+    $this->db->select('codigocutterdewey');
+    $this->db->like('codigocutterdewey', $codigoBase);
+    $this->db->order_by('codigocutterdewey', 'DESC');
+    $ultimoCodigo = $this->db->get('libro')->row();
 
-    // Generar el código del ejemplar
-    $codigoEjemplar = $codigoCutter . '-' . $codigoDewey . '-' . uniqid();
-
-    $data = array(
-        'codigoejemplar' => $codigoEjemplar,
-        'estado' => 1,
-        'fechacreacion' => date('Y-m-d H:i:s'),
-        'ultimaactualizacion' => date('Y-m-d H:i:s'),
-        'idusuario' => $idusuario,
-        'libro_id' => $libro_id
-    );
-
-    // Insertar en la tabla ejemplar
-    $this->db->insert('ejemplar', $data);
-
-    // Devuelve un mensaje de éxito
-    return ['success' => true, 'message' => 'Ejemplar agregado correctamente.'];
-}
-public function getLibro($libro_id)
-{
-    return $this->db->get_where('libro', ['id' => $libro_id])->row();
-}
-
-public function getEjemplaresPorLibro($libro_id)
-{
-    return $this->db->get_where('ejemplar', ['libro_id' => $libro_id])->result();
-}
-
-
-    public function verificarUsuario($idusuario)
-    {
-        $usuario = $this->db->get_where('usuario', ['id' => $idusuario])->row();
-        return !empty($usuario);
+    // Determinar el número a usar
+    if ($ultimoCodigo) {
+        // Extraer el número final y aumentar
+        preg_match('/\d+$/', $ultimoCodigo->codigocutterdewey, $matches);
+        $numeroFinal = isset($matches[0]) ? (int)$matches[0] + 1 : 1; // Aumenta el último número encontrado
+    } else {
+        // Si no hay libros, empieza en 1
+        $numeroFinal = 1;
     }
 
+    // Generar el nuevo código Cutter-Dewey
+    $codigoCutterDewey = $codigoBase . str_pad($numeroFinal, 4, '0', STR_PAD_LEFT);
+
+    // Aquí puedes agregar el código generado al array de datos, pero sin 'autor_id'
+    unset($data['autor_id']); // Elimina autor_id del arreglo
+    $data['codigocutterdewey'] = $codigoCutterDewey;
+    $data['cantidadejemplares'] = 1; // Inicializa la cantidad de ejemplares a 1
+
+    // Inserta el nuevo libro en la tabla libro
+    $this->db->insert('libro', $data);
+
+    // Devuelve el ID del nuevo libro insertado
+    return ['success' => true, 'message' => 'Libro agregado correctamente.', 'libro_id' => $this->db->insert_id()];
+}
+
+
+
+
+// Método para agregar la relación entre libro y autor
+/*public function agregarAutorLibro($libro_id, $autor_id)
+{
+    $data = [
+        'libro_id' => $libro_id,
+        'autor_id' => $autor_id
+    ];
+    return $this->db->insert('libro_has_autor', $data);
+}*/
 
 
 public function obtenerLibros()
@@ -119,7 +144,9 @@ public function obtenerLibros()
    return $query->result();
 }
 
-public function registrarPrestamo($libro_id)
+}
+
+/*public function registrarPrestamo($libro_id)
 {
     $this->db->trans_start();
 
@@ -139,8 +166,8 @@ public function registrarPrestamo($libro_id)
     $this->db->trans_complete();
 
     return $this->db->trans_status(); // Devuelve el estado de la transacción
-}
- }
+}*/
+
  
 
 

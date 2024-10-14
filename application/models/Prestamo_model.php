@@ -3,93 +3,81 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Prestamo_model extends CI_Model {
 
-  public function registrarPrestamo()
-{
-    // Suponiendo que los datos vienen de una solicitud POST
-    $usuario_lector_id = $this->input->post('usuario_lector_id');
-    $libro_id = $this->input->post('libro_id');
-    $id_bibliotecario = $this->session->userdata('id_usuario'); // ID del bibliotecario logueado
-
-    // Iniciar la transacción
-    $this->db->trans_start();
-
-    // Verificar que el libro esté disponible
-    $this->db->select('libro_prestamo.*');
-    $this->db->from('libro_prestamo');
-    $this->db->join('prestamo', 'prestamo.id = libro_prestamo.prestamo_id');
-    $this->db->where('libro_id', $libro_id);
-    $this->db->where('prestamo.estado', 0); // Asegúrate de que el libro no esté prestado
-    $existePrestamo = $this->db->get();
-
-    if ($existePrestamo->num_rows() > 0) {
-        log_message('error', 'El libro con ID ' . $libro_id . ' ya está prestado.');
+    public function registrarPrestamo($usuario_lector_id, $libro_id)
+    {
+        // Iniciar la transacción
+        $this->db->trans_start();
+    
+        // Comprobar que el ID del libro existe
+        $this->db->where('id', $libro_id);
+        $existeLibro = $this->db->get('libro');
+    
+        if ($existeLibro->num_rows() == 0) {
+            log_message('error', 'El libro con ID ' . $libro_id . ' no existe.');
+            $this->db->trans_complete();
+            return false; // El libro no existe
+        }
+    
+        // Verificar que el libro esté disponible
+        $this->db->select('libro_prestamo.*');
+        $this->db->from('libro_prestamo');
+        $this->db->join('prestamo', 'prestamo.id = libro_prestamo.prestamo_id');
+        $this->db->where('libro_id', $libro_id);
+        $this->db->where('prestamo.estado', 0); // Asegúrate de que el libro no esté prestado
+        $existePrestamo = $this->db->get();
+    
+        if ($existePrestamo->num_rows() > 0) {
+            log_message('error', 'El libro con ID ' . $libro_id . ' ya está prestado.');
+            $this->db->trans_complete();
+            return false; // El libro ya está prestado
+        }
+    
+        // Datos para la tabla 'prestamo'
+        $data_prestamo = array(
+            'idUsuarioLector' => $usuario_lector_id,
+            'idUsuarioBibliotecario' => null, // Inicialmente nulo
+            'fechaprestamo' => date('Y-m-d H:i:s'),
+            'estado' => 0, // Estado 0 significa "pendiente"
+        );
+    
+        // Insertar el préstamo
+        if (!$this->db->insert('prestamo', $data_prestamo)) {
+            log_message('error', 'Error al insertar en prestamo: ' . print_r($this->db->error(), true));
+            $this->db->trans_complete();
+            return false; 
+        }
+    
+        $prestamo_id = $this->db->insert_id(); // Obtener el ID del préstamo recién insertado
+    
+        // Insertar la relación libro-prestamo en la tabla intermedia
+        $data_libro_prestamo = array(
+            'prestamo_id' => $prestamo_id,
+            'libro_id' => $libro_id
+        );
+    
+        // Insertar en libro_prestamo
+        if (!$this->db->insert('libro_prestamo', $data_libro_prestamo)) {
+            log_message('error', 'Error al insertar en libro_prestamo: ' . print_r($this->db->error(), true));
+            $this->db->trans_complete();
+            return false; 
+        }
+    
+        // Cambiar el estado del préstamo a 'prestado'
+        $this->db->where('id', $prestamo_id);
+        $this->db->update('prestamo', array('estado' => 1)); // Cambia el estado a 'prestado'
+    
+        // Completar la transacción
         $this->db->trans_complete();
-        return false; // El libro ya está prestado
-    }
-
-    // Datos para la tabla 'prestamo'
-    $data_prestamo = array(
-        'idUsuarioLector' => $usuario_lector_id,
-        'idUsuarioBibliotecario' => null, // Inicialmente nulo
-        'fechaprestamo' => date('Y-m-d H:i:s'),
-        'estado' => 0, // Estado 0 significa "pendiente"
-    );
-
-    // Insertar el préstamo
-    if (!$this->db->insert('prestamo', $data_prestamo)) {
-        log_message('error', 'Error al insertar en prestamo: ' . print_r($this->db->error(), true));
-        $this->db->trans_complete();
-        return false; 
+    
+        // Verificar si la transacción fue exitosa
+        if ($this->db->trans_status() === FALSE) {
+            log_message('error', 'Error en la transacción de préstamo: ' . print_r($this->db->error(), true));
+            return false; 
+        }
+    
+        return $prestamo_id; // Retorna el ID del préstamo registrado
     }
     
-    $prestamo_id = $this->db->insert_id(); // Obtener el ID del préstamo recién insertado
-
-    // Comprobar que el libro realmente existe
-    $this->db->where('id', $libro_id);
-    $existeLibro = $this->db->get('libro');
-    
-    if ($existeLibro->num_rows() == 0) {
-        log_message('error', 'El libro con ID ' . $libro_id . ' no existe.');
-        $this->db->trans_complete();
-        return false; // El libro no existe
-    }
-
-    // Comprobar que el ID del préstamo es válido
-    if ($prestamo_id <= 0) {
-        log_message('error', 'El ID de préstamo no es válido: ' . $prestamo_id);
-        $this->db->trans_complete();
-        return false; // El ID de préstamo no es válido
-    }
-
-    // Insertar la relación libro-prestamo en la tabla intermedia
-    $data_libro_prestamo = array(
-        'prestamo_id' => $prestamo_id,
-        'libro_id' => $libro_id
-    );
-
-    // Insertar en libro_prestamo
-    if (!$this->db->insert('libro_prestamo', $data_libro_prestamo)) {
-        log_message('error', 'Error al insertar en libro_prestamo: ' . print_r($this->db->error(), true));
-        $this->db->trans_complete();
-        return false; 
-    }
-
-    // Cambiar el estado del préstamo a 'prestado'
-    $this->db->where('id', $prestamo_id);
-    $this->db->update('prestamo', array('estado' => 1)); // Cambia el estado a 'prestado'
-
-    // Completar la transacción
-    $this->db->trans_complete();
-
-    // Verificar si la transacción fue exitosa
-    if ($this->db->trans_status() === FALSE) {
-        log_message('error', 'Error en la transacción de préstamo: ' . print_r($this->db->error(), true));
-        return false; 
-    }
-
-    return $prestamo_id; // Retorna el ID del préstamo registrado
-}
-
     // Método para actualizar un préstamo
     public function actualizarPrestamo($prestamo_id, $data_update) {
    
