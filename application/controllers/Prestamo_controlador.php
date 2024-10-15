@@ -15,7 +15,8 @@ class Prestamo_controlador extends CI_Controller {
 
   // Obtener las solicitudes de préstamo pendientes (estado = 0)
   $data['prestamos_pendientes'] = $this->Prestamo_model->obtenerSolicitudesPendientes();
-
+ // Para depuración
+ var_dump($data['prestamos_pendientes']); // Verifica si se obtienen datos
   // Cargar la vista para mostrar las solicitudes pendientes
   $this->load->view('bibliotecario/solicitudes_pendientes', $data);
 }

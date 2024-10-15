@@ -179,11 +179,14 @@ public function buscarPorCI($carnetidentidad) {
 	}
 }
 
-public function insertarUsuario($data) {
-	$this->db->insert('usuario', $data);
-	return $this->db->insert_id(); // Retorna el ID del nuevo usuario
+public function insertarUsuario($data_usuario) {
+    if ($this->db->insert('usuario', $data_usuario)) {
+        return $this->db->insert_id(); // Retorna el ID del nuevo usuario
+    } else {
+        log_message('error', 'Error al insertar usuario: ' . print_r($this->db->error(), true));
+        return false; // O maneja el error según lo necesites
+    }
 }
-
 
 
 }
