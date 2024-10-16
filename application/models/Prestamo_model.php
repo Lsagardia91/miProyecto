@@ -3,15 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Prestamo_model extends CI_Model {
 
-    public function registrarPrestamo()
+    public function registrarPrestamo($usuario_id,$libro_id)
 {
     // Suponiendo que los datos vienen de una solicitud POST
-    $usuario_lector_id = $this->input->post('usuario_lector_id');
-    $libro_id = $this->input->post('libro_id');
+    log_message('debug', 'Usuario ID recibido: ' . $usuario_id);
+    log_message('debug', 'Libro ID recibido: ' . $libro_id);
     $id_bibliotecario = $this->session->userdata('id_usuario'); // ID del bibliotecario logueado
 
 // Validar que el lector existe y es un lector
-$this->db->where('id', $usuario_lector_id);
+$this->db->where('id', $usuario_id);
 $this->db->where('rol', 'lector'); // Asegúrate de que sea un lector
 $lector = $this->db->get('usuario');
 
@@ -48,7 +48,7 @@ if ($lector->num_rows() == 0) {
    
     // Datos para la tabla 'prestamo'
     $data_prestamo = array(
-        'idUsuarioLector' => $usuario_lector_id,
+        'idUsuarioLector' => $usuario_id,
         'idUsuarioBibliotecario' => $id_bibliotecario, // Bibliotecario logueado
         'fechaprestamo' => date('Y-m-d H:i:s'),
         'estado' => 0, // Estado 0 significa "pendiente"
@@ -89,11 +89,11 @@ if ($lector->num_rows() == 0) {
 }
 
     // Método para actualizar un préstamo
-    public function actualizarPrestamo($prestamo_id, $data_update) {
+    public function actualizarPrestamo($prestamo_id) {
    
       // Suponiendo que el ID del bibliotecario está almacenado en la sesión
     $idBibliotecario = $this->session->userdata('id_usuario'); // Cambia 'id_usuario' por la clave que uses para el ID en la sesión
-    $prestamo_id = $this->input->post('prestamo_id');
+   // $prestamo_id = $this->input->post('prestamo_id');
 
     // Verifica que el ID del bibliotecario sea válido
     if (!$idBibliotecario) {

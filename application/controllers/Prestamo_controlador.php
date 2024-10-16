@@ -30,7 +30,7 @@ public function procesarPrestamo() {
 
   /// Verifica si el usuario está logueado y es bibliotecario
   if (!$this->session->userdata('login') || $this->session->userdata('rol') !== 'bibliotecario') {
-    redirect('Username/index/3', 'refresh'); // Redirige al login si no está logueado
+    //redirect('Username/index/3', 'refresh'); // Redirige al login si no está logueado
     return;
 }
 
@@ -39,7 +39,7 @@ log_message('debug', 'Procesando préstamo con ID: ' . $prestamo_id);
 
 // Actualizar el préstamo para asignar el bibliotecario y cambiar el estado a "realizado"
 $data_update = array(
-    'idUsuarioBibliotecario' => $this->session->userdata('idusuario'), // ID del bibliotecario logueado
+    'idUsuarioBibliotecario' => $this->session->userdata('login'), // ID del bibliotecario logueado
     'estado' => 1, // Estado 1 significa "préstamo realizado"
     'fechadevolucion' => null // Puedes establecer la fecha de devolución si es necesario
 );
@@ -56,7 +56,7 @@ if ($actualizado) {
     // Redirigir con un mensaje de error
     $this->session->set_flashdata('mensaje', 'Error al procesar el préstamo. Inténtalo de nuevo.');
 }
-redirect('Prestamo_controlador/solicitudesPendientes');
+//redirect('Prestamo_controlador/solicitudesPendientes');
 }
 public function librosPrestados() {
   // Cargar el modelo de préstamos

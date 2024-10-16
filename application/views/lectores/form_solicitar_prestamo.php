@@ -2,7 +2,8 @@
 
 <p>Por favor, llene sus datos para completar la solicitud de préstamo.</p>
 
-<?php echo form_open('Lector_controlador/procesarSolicitudPrestamo'); ?>
+<?php echo form_open('Lector_controlador/procesarSolicitudPrestamo', ['method' => 'post']); ?>
+
     <input type="hidden" name="libro_id" value="<?php echo $libro_id; ?>" />
 
     <div class="form-group">
@@ -21,4 +22,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+
 <?php echo form_close(); ?>
+
