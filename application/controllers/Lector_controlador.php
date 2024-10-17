@@ -29,9 +29,6 @@ class Lector_controlador extends CI_Controller {
  
    public function procesarSolicitudPrestamo() 
    {
-
-     // Esto es una línea de log para depuración
-     log_message('debug', 'Entrando en procesarSolicitudPrestamo');
      
     $this->load->model('Usuarios_model');
     $this->load->model('Prestamo_model');
@@ -42,21 +39,13 @@ class Lector_controlador extends CI_Controller {
     $email_lector = $this->input->post('email_lector');
     $libro_id = $this->input->post('libro_id'); // Asegúrate de que este dato venga del formulario
 
-    // Registrar los datos del formulario en el log
-    log_message('info', 'Datos del formulario: ' . print_r($_POST, true));
- 
-    // Verificar si $ci_lector tiene un valor válido
- log_message('debug', 'CI del lector recibido del formulario: ' . $ci_lector);
+  
   
  // Verificar si el lector ya está registrado
     $this->db->where('carnetidentidad', $ci_lector);
     $lector = $this->db->get('usuario')->row();
     
-    if ($lector) {
-        log_message('debug', 'Lector encontrado en la base de datos: ' . print_r($lector, true));
-    } else {
-        log_message('debug', 'Lector no encontrado en la base de datos.');
-    }
+ 
 
     if (!$lector) {
         // Si no existe, crear nuevo usuario (lector)
@@ -71,17 +60,13 @@ class Lector_controlador extends CI_Controller {
 
         // Insertar nuevo lector
         $usuario_id = $this->Usuarios_model->insertarUsuario($data_usuario);
-        log_message('debug', 'ID de usuario insertado: ' . $usuario_id);
+      
     } else {
         // Si existe, obtener el ID del usuario lector
         $usuario_id = $lector->id;
     }
    // Verificar si $usuario_id tiene un valor válido
-   log_message('debug', 'ID del usuario después de verificar o crear: ' . $usuario_id);
-
-   // Registrar el préstamo usando la tabla intermedia
-   log_message('debug', 'Registrando préstamo: Usuario ID: ' . $usuario_id . ', Libro ID: ' . $libro_id);
-    // Registrar el préstamo usando la tabla intermedia
+   
     $prestamo_id = $this->Prestamo_model->registrarPrestamo($usuario_id, $libro_id);
 
     // Redirigir con un mensaje de éxito o error

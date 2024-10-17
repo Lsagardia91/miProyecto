@@ -123,6 +123,10 @@ public function validarusuario()
 
 public function panel()
 {
+     // Depurar el contenido de la sesión
+     echo "<pre>";
+     print_r($this->session->userdata());
+     echo "</pre>";
     if ($this->session->userdata('login')) {
         log_message('debug', 'Usuario logueado con rol: ' . $this->session->userdata('rol')); // Log para depurar
         $rol_usuario = $this->session->userdata('rol');
@@ -135,7 +139,7 @@ public function panel()
         } elseif ($rol_usuario == 'lector') {
             $this->load->view('panellector');
         } else {
-            log_message('debug', 'Rol desconocido, redirigiendo a login');
+            //log_message('debug', 'Rol desconocido, redirigiendo a login');
             redirect('Username/index', 'refresh');
         }
     } else {

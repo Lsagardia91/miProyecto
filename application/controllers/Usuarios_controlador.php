@@ -22,9 +22,14 @@ class Usuarios_controlador extends CI_Controller {
 
   public function index()
 {
-   var_dump($this->session->userdata('tipo'));
+     // Depurar el contenido de la sesión
+     echo "<pre>";
+     print_r($this->session->userdata());
+     echo "</pre>";
+   var_dump($this->session->userdata(''));
 
-    if($this->session->userdata('tipo') == 1)
+    if($this->session->userdata('rol') == 1)
+   // if ($this->session->userdata('rol') == 'administrador') {  ESTO DEBERIA SER LO CORRECTO
     { 
         $lista = $this->Usuarios_model->listadeusuarios();
         $data['usuario'] = $lista;
@@ -40,9 +45,14 @@ class Usuarios_controlador extends CI_Controller {
     }
 }
 
-/*public function bibliotecario()
+public function bibliotecario()
 {
-    if($this->session->userdata('tipo') == 'bibliotecario')
+     // Depurar el contenido de la sesión
+     echo "<pre>";
+     print_r($this->session->userdata());
+     echo "</pre>";
+ 
+    if($this->session->userdata('rol') == 'bibliotecario')
     { 
         $this->load->view('inc/header');
         $this->load->view('panelbibliotecario');
@@ -54,9 +64,9 @@ class Usuarios_controlador extends CI_Controller {
     }
 }
 
-public function lector()
+/*public function lector()
 {
-    if($this->session->userdata('tipo') == 'lector')
+    if($this->session->userdata('rol') == 'lector')
     { 
         $this->load->view('inc/header');
         $this->load->view('panellector'); // Asegúrate de que esta vista existe
