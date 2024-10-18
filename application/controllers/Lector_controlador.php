@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+date_default_timezone_set('America/La_Paz');
 class Lector_controlador extends CI_Controller {
 
    public function listaLibros()
@@ -23,13 +23,15 @@ class Lector_controlador extends CI_Controller {
       // Cargar la vista del formulario de solicitud de préstamo, pasando el id del libro
       $data['libro_id'] = $libro_id;
       $this->load->view('inclectores/header');
+     // $this->load->view('inc/menu');
       $this->load->view('lectores/form_solicitar_prestamo', $data);
       $this->load->view('inclectores/footer');
    }
  
    public function procesarSolicitudPrestamo() 
    {
-     
+    $this->load->view('inclectores/header');
+    $this->load->view('inclectores/footer');
     $this->load->model('Usuarios_model');
     $this->load->model('Prestamo_model');
 
@@ -76,7 +78,7 @@ class Lector_controlador extends CI_Controller {
         $this->session->set_flashdata('mensaje', 'Error al enviar la solicitud de préstamo.');
     }
 
-  //  redirect('Lector_controlador/listaLibros');
+    redirect('Lector_controlador/listaLibros');
 }
 
   

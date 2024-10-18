@@ -5,9 +5,24 @@ class Libros_model extends CI_Model {
     
     public function listadelibros()
     {
-        $this->db->select('*');
+/*      $this->db->select('*');
         $this->db->from('libro');
-        return $this->db->get(); // devuelve resultado
+        return $this->db->get(); // devuelve resultado*/
+        // Consulta para obtener libros que no están prestados
+         $this->db->select('libro.*'); // Selecciona todos los campos de la tabla libro
+         $this->db->from('libro');
+         $this->db->join('libro_prestamo', 'libro.id = libro_prestamo.libro_id', 'left'); // Relaciona libro con libro_prestamo
+         $this->db->join('prestamo', 'libro_prestamo.prestamo_id = prestamo.id', 'left'); // Relaciona libro_prestamo con prestamo
+
+         // Filtro para excluir libros prestados (prestamo.estado = 1)
+         $this->db->group_by('libro.id'); // Agrupamos para evitar duplicados
+         $this->db->having('SUM(CASE WHEN prestamo.estado = 1 THEN 1 ELSE 0 END) = 0'); // Solo libros que no tienen estado 1
+         
+         $query = $this->db->get();
+         return $query->result(); // Devuelve el objeto de consulta
+        // $query = $this->db->get();
+   
+         //return $query->result(); // Devuelve los resultados
      }
      public function agregarlibro($data)
      {
@@ -140,10 +155,24 @@ public function agregarEjemplar($data)
 
 public function obtenerLibros()
 {
-   $query = $this->db->get('libro'); // Asegúrate de que sea el nombre correcto de tu tabla
-   return $query->result();
-}
+  /* $query = $this->db->get('libro'); // Asegúrate de que sea el nombre correcto de tu tabla
+   return $query->result();*/
+    // Consulta para obtener libros que no están prestados
+    $this->db->select('libro.*'); // Selecciona todos los campos de la tabla libro
+    $this->db->from('libro');
+    $this->db->join('libro_prestamo', 'libro.id = libro_prestamo.libro_id', 'left'); // Relaciona libro con libro_prestamo
+    $this->db->join('prestamo', 'libro_prestamo.prestamo_id = prestamo.id', 'left'); // Relaciona libro_prestamo con prestamo
 
+    $this->db->group_by('libro.id'); // Agrupamos para evitar duplicados
+    $this->db->having('SUM(CASE WHEN prestamo.estado = 1 THEN 1 ELSE 0 END) = 0'); // Solo libros que no tienen estado 1
+
+    $query = $this->db->get(); // Ejecuta la consulta
+    return $query->result(); // Devuelve el objeto de consulta
+}
+public function countLibros()
+{
+    return $this->db->count_all('libro');
+}
 }
 
 /*public function registrarPrestamo($libro_id)
@@ -167,6 +196,7 @@ public function obtenerLibros()
 
     return $this->db->trans_status(); // Devuelve el estado de la transacción
 }*/
+
 
  
 

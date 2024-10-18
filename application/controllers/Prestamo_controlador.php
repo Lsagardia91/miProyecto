@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+date_default_timezone_set('America/La_Paz');
 class Prestamo_controlador extends CI_Controller {
+    
 
   public function __construct() {
       parent::__construct();
@@ -11,6 +12,9 @@ class Prestamo_controlador extends CI_Controller {
   // Método para mostrar las solicitudes pendientes
   // Método para mostrar las solicitudes pendientes
 public function solicitudesPendientes() {
+    $this->load->view('inc/header');
+    $this->load->view('inc/menu');
+    $this->load->view('inc/footer');
   $this->load->model('Prestamo_model');
 
   // Obtener las solicitudes de préstamo pendientes (estado = 0)
@@ -67,6 +71,9 @@ public function solicitudesPendientes() {
 
   // Método para ver los libros prestados
   public function librosPrestados() {
+    $this->load->view('inc/header');
+    $this->load->view('inc/menu');
+    $this->load->view('inc/footer');
       $this->load->model('Prestamo_model');
 
       // Obtener los libros prestados desde el modelo
@@ -83,6 +90,9 @@ public function solicitudesPendientes() {
 
   // Método para devolver un libro
   public function devolverLibro() {
+    $this->load->view('inc/header');
+    $this->load->view('inc/menu');
+    $this->load->view('inc/footer');
       $this->load->model('Prestamo_model');
 
       // Verificar si se ha enviado el ID del préstamo
@@ -105,5 +115,19 @@ public function solicitudesPendientes() {
 
       // Redirigir a la vista de libros prestados
       redirect('Prestamo_controlador/librosPrestados');
+  }
+  public function librosDevueltos()
+  {
+    $this->load->view('inc/header');
+    $this->load->view('inc/menu');
+    $this->load->view('inc/footer');
+      // Cargar el modelo
+      $this->load->model('Prestamo_model');
+  
+      // Obtener la lista de libros devueltos
+      $data['libros_devueltos'] = $this->Prestamo_model->obtenerLibrosDevueltos();
+  
+      // Cargar la vista con los datos
+      $this->load->view('bibliotecario/libros_devueltos_vista', $data);
   }
 }

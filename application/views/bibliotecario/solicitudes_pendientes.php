@@ -1,4 +1,19 @@
-<h1>Solicitudes de Préstamo Pendientes</h1>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" style="background-color: #ecffef">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3 align-items-center">
+            <!-- Título de la página -->
+
+
+<h1>Solicitudes de Préstamo Pendientes</h1> 
+<br>
+<a href="<?php echo base_url(); ?>index.php/Username/panel">
+<button type="button" class="btn btn-warning">VOLVER</button>
+</a>
+<br>
 
 <?php if (!empty($prestamos_pendientes)): ?>
 

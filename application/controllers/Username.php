@@ -108,7 +108,7 @@ public function validarusuario()
 
     if ($consulta->num_rows() > 0) {
         foreach ($consulta->result() as $row) {
-            $this->session->set_userdata('idusuario', $row->idusuario);
+            $this->session->set_userdata('idusuario', $row->id);
             $this->session->set_userdata('username', $row->username);
             $this->session->set_userdata('rol', $row->rol);
             $this->session->set_userdata('login', TRUE); // Establecer login aquí
@@ -124,9 +124,9 @@ public function validarusuario()
 public function panel()
 {
      // Depurar el contenido de la sesión
-     echo "<pre>";
-     print_r($this->session->userdata());
-     echo "</pre>";
+    // echo "<pre>";
+     //print_r($this->session->userdata());
+    // echo "</pre>";
     if ($this->session->userdata('login')) {
         log_message('debug', 'Usuario logueado con rol: ' . $this->session->userdata('rol')); // Log para depurar
         $rol_usuario = $this->session->userdata('rol');
@@ -135,7 +135,7 @@ public function panel()
         if ($rol_usuario == 'administrador') {
             $this->load->view('catalogo');
         } elseif ($rol_usuario == 'bibliotecario') {
-            $this->load->view('catalogo');
+           $this->load->view('catalogo');
         } elseif ($rol_usuario == 'lector') {
             $this->load->view('panellector');
         } else {

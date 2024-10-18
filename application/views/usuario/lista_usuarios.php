@@ -13,6 +13,7 @@
 <button type="button" class="btn btn-warning">CERRAR CESION</button>
 </a> 
 <br>
+
 <br>
 <a href="<?php echo base_url(); ?>index.php/Username/panel">
 <button type="button" class="btn btn-warning">VOLVER</button>
@@ -47,13 +48,10 @@ echo date('Y/m/d H:i:s');
         <th>Correo Electrónico</th>
         <th>Colegio/Univ/Inst</th>
         <th>Username</th>
-        <th>Estado</th>
         <th>Fecha Creación</th>
         <th>Última Actualización</th>
-        <th>ID Usuario Creador</th>
-        <th>Modificar</th>
-        <th>Eliminar</th>
-        <th>Acción</th>
+        <th>Tipo de usuario</th>
+
 	</thead>
     <tbody>
 		<?php
@@ -105,7 +103,6 @@ echo date('Y/m/d H:i:s');
             <td><?php echo $row->username; ?></td>
             <td><?php echo $row->fechacreacion; ?></td>
             <td><?php echo $row->ultimaactualizacion; ?></td>
-            <td><?php echo $row->idusuario; ?></td>
             <td><?php echo $row->rol; ?></td>
 
 			<td>

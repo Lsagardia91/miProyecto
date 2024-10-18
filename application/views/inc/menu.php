@@ -74,12 +74,6 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('index.php/Libros_controlador/agregarEjemplar'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Ejmplares</p>
-              </a>
-            </li>
-            <li class="nav-item">
               <a href="<?php echo base_url('index.php/Prestamo_controlador/solicitudesPendientes'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Prestamos</p>
@@ -89,6 +83,12 @@
               <a href="<?php echo base_url('index.php/Prestamo_controlador/librosPrestados'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Libros Prestados</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('index.php/Prestamo_controlador/librosDevueltos'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Libros Devueltos</p>
               </a>
             </li>
 

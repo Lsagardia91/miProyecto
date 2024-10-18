@@ -187,6 +187,12 @@ public function insertarUsuario($data) {
         return false; // O maneja el error según lo necesites
     }
 }
+public function countLectores()
+{
+    $this->db->where('rol', 'lector'); // Asumiendo que tienes un tipo de usuario para lectores
+    return $this->db->count_all_results('usuario');
+}
+
 
 
 }

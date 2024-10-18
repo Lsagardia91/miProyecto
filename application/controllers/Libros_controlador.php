@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+date_default_timezone_set('America/La_Paz');
 class Libros_controlador extends CI_Controller {
 
     public function m_listar()
@@ -194,7 +194,7 @@ class Libros_controlador extends CI_Controller {
                 'titulo' => strtoupper($this->input->post('titulov')),
                 'isbn' => $this->input->post('isbnv'),
                 'ubicacion' => strtoupper($this->input->post('ubicacionv')),
-                'codigocutter' => strtoupper($this->input->post('codigocutterv')),
+                'codigocutterdewey' => strtoupper($this->input->post('codigocutterdeweyv')),
                 'categoria_id' => $this->input->post('categoria_idv'),
                 'editorial_id' => $this->input->post('editorial_idv'),
                 'ultimaactualizacion' => date('Y-m-d H:i:s') // No es necesario usuarioactualizador si no existe en la tabla

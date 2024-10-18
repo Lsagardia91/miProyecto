@@ -65,7 +65,8 @@ echo date('Y/m/d H:i:s');
     <tbody>
 		<?php
 		$contador=1;
-		foreach($libross->result() as $row)
+		//foreach($libross->result() as $row)
+		foreach($libross as $row)
 		{
 		?>
 		<tr>

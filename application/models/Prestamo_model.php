@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Prestamo_model extends CI_Model {
     public function registrarPrestamo($usuario_id, $libro_id)
     {
+        $this->load->view('inc/header');
+        $this->load->view('inc/menu');
+        $this->load->view('inc/footer');
         // Obtener el ID del bibliotecario logueado
         $id_bibliotecario = $this->session->userdata('id'); // ID del bibliotecario logueado
     
@@ -91,7 +94,7 @@ class Prestamo_model extends CI_Model {
          // Datos que quieres actualizar
          $data = array(
              'estado' => 1, // Actualizar el estado (1: prestado, 0: pendiente, 2: devuelto, etc.)
-             'fechadevolucion' => $fechaDevolucion ? $fechaDevolucion : date('Y-m-d H:i:s'), // Registrar fecha de devolución si se proporciona
+             //'fechadevolucion' => $fechaDevolucion ? $fechaDevolucion : date('Y-m-d H:i:s'), // Registrar fecha de devolución si se proporciona
          );
          
          // Condición para actualizar el préstamo específico
@@ -186,6 +189,31 @@ class Prestamo_model extends CI_Model {
 
     redirect('Prestamo_controlador/librosPrestados');
     }
-  
+    public function obtenerLibrosDevueltos()
+    {
+        $this->db->select('prestamo.id, libro.titulo, usuario.nombres, usuario.apellidos, prestamo.fechaprestamo, prestamo.fechadevolucion');
+        $this->db->from('prestamo');
+        $this->db->join('usuario', 'prestamo.usuario_id = usuario.id');
+        $this->db->join('libro_prestamo', 'prestamo.id = libro_prestamo.prestamo_id');
+        $this->db->join('libro', 'libro_prestamo.libro_id = libro.id');
+        $this->db->where('prestamo.estado', 0); // Solo préstamos devueltos
+        $query = $this->db->get();
+    
+        return $query->result();
+    }
+    public function countPrestamos()
+{
+    return $this->db->count_all('prestamo');
+}
+
+
+public function countDevoluciones()
+{
+    // Contar préstamos que están disponibles (estado = 0)
+    $this->db->where('estado', 0); // 0 indica que el libro ha sido devuelto
+    return $this->db->count_all_results('prestamo'); // Cambia 'prestamo' por el nombre real de tu tabla de préstamos
+}
+
+
 
 }

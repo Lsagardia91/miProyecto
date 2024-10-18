@@ -23,12 +23,12 @@ class Usuarios_controlador extends CI_Controller {
   public function index()
 {
      // Depurar el contenido de la sesión
-     echo "<pre>";
-     print_r($this->session->userdata());
-     echo "</pre>";
-   var_dump($this->session->userdata(''));
+   //  echo "<pre>";
+    // print_r($this->session->userdata());
+    // echo "</pre>";
+   //var_dump($this->session->userdata(''));
 
-    if($this->session->userdata('rol') == 1)
+    if($this->session->userdata('rol') == 'administrador')
    // if ($this->session->userdata('rol') == 'administrador') {  ESTO DEBERIA SER LO CORRECTO
     { 
         $lista = $this->Usuarios_model->listadeusuarios();
@@ -45,7 +45,7 @@ class Usuarios_controlador extends CI_Controller {
     }
 }
 
-public function bibliotecario()
+/*public function bibliotecario()
 {
      // Depurar el contenido de la sesión
      echo "<pre>";
@@ -60,7 +60,7 @@ public function bibliotecario()
     }
     else
     {
-        redirect('Usuarios_controlador/m_listar', 'refresh'); // Redirigir si no es bibliotecario
+       // redirect('Usuarios_controlador/m_listar', 'refresh'); // Redirigir si no es bibliotecario
     }
 }
 

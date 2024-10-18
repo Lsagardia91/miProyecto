@@ -24,7 +24,7 @@ if ($infolibro->num_rows() > 0) {
 
 <!-- Campo para ingresar el código Cutter -->
 <label for="codigocutterv">Código Cutter:</label>
-<input type="text" class="form-control" name="codigocutterv" placeholder="Escribe el código Cutter" value="<?php echo $row->codigocutter; ?>" required>
+<input type="text" class="form-control" name="codigocutterdeweyv" placeholder="Escribe el código Cutter" value="<?php echo $row->codigocutterdewey; ?>" required>
 
 <!-- Selección de la categoría -->
 <label for="categoria_idv">Categoría:</label>

@@ -1,8 +1,17 @@
-
-
 <?php $this->load->view('inc/header'); ?>
-  <?php $this->load->view('inc/menu'); ?>
+<?php $this->load->view('inc/menu'); ?>
 
+<style>
+  .small-box .inner h3 {
+    font-size: 28px !important; /* Forzar el tamaño del texto en el título */
+  }
+  .small-box .inner p {
+    font-size: 18px !important; /* Forzar el tamaño del texto en el párrafo */
+  }
+  .small-box-footer {
+    font-size: 16px !important; /* Forzar el tamaño del texto en el enlace "More info" */
+  }
+</style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <!-- Content Wrapper. Contains page content -->
@@ -24,6 +33,7 @@
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
+    
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -33,9 +43,8 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-              <h3>Ciencia<sup style="font-size: 20px"></sup></h3>
-
-                  <p>  </p>
+              <h3><?php echo isset($total_libros) ? $total_libros : 0; ?><sup style="font-size: 10px"></sup></h3>
+                <p>Todos los libros</p> <!-- Añadir descripción -->
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -48,9 +57,8 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>Tecnologia<sup style="font-size: 20px"></sup></h3>
-
-                <p>      </p>
+              <h3><?php echo isset($total_prestamos) ? $total_prestamos : 0; ?><sup style="font-size: 20px"></sup></h3>
+                <p>Préstamos totales</p> <!-- Añadir descripción -->
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -63,9 +71,8 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <h3>Literatura<sup style="font-size: 20px"></sup></h3>
-
-                <p>   </p>
+              <h3><?php echo isset($total_devoluciones) ? $total_devoluciones : 0; ?><sup style="font-size: 20px"></sup></h3>
+                <p>Devoluciones</p> <!-- Añadir descripción -->
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -78,9 +85,8 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>Religión</h3>
-
-                <p>    </p>
+              <h3><?php echo isset($total_lectores) ? $total_lectores : 0; ?><sup style="font-size: 20px"></sup></h3>
+                <p>Usuarios</p> <!-- Añadir descripción -->
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -88,76 +94,13 @@
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-
-
-
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>Arte</h3>
-
-                <p></p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>Poesia</h3>
-
-                <p>   </p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>Misterio</h3>
-
-                <p>    </p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-secondary">
-              <div class="inner">
-                <h3>Fantasía</h3>
-
-                <p></p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- right col -->
+          <!-- ./col -->
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-     
   </div>
   <!-- /.content-wrapper -->
-  <?php $this->load->view('inc/footer'); ?>
+  
+<?php $this->load->view('inc/footer'); ?>
