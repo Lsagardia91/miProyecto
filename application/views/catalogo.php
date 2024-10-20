@@ -13,6 +13,8 @@
   }
 </style>
 
+
+
 <body class="hold-transition sidebar-mini layout-fixed">
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -44,6 +46,7 @@
             <div class="small-box bg-info">
               <div class="inner">
               <h3><?php echo isset($total_libros) ? $total_libros : 0; ?><sup style="font-size: 10px"></sup></h3>
+
                 <p>Todos los libros</p> <!-- Añadir descripción -->
               </div>
               <div class="icon">

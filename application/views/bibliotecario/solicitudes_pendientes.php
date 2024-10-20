@@ -33,28 +33,27 @@ var_dump($prestamos_pendientes);
             </tr>
         </thead>
         <tbody>
-   
+    <?php foreach ($prestamos_pendientes as $prestamo): ?>
+        <?php if ($prestamo->estado == 0): // Solo muestra préstamos con estado = 0 ?>
+            <tr>
+                <td><?php echo $prestamo->nombres; ?></td>
+                <td><?php echo $prestamo->carnetidentidad; ?></td>
+                <td><?php echo $prestamo->titulo; ?></td>
+                <td><?php echo date('d/m/Y H:i:s', strtotime($prestamo->fechaprestamo)); ?></td>
+                <td>
+                    <?php echo form_open('Prestamo_controlador/procesarPrestamo'); ?>
+                    <input type="hidden" name="prestamo_id" value="<?php echo $prestamo->id; ?>">
+                    <button type="submit" class="btn btn-success" 
+                        onclick="return confirm('¿Estás seguro de que deseas procesar este préstamo?');">
+                        Procesar Préstamo
+                    </button>
+                    <?php echo form_close(); ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</tbody>
 
-            
-            <?php foreach ($prestamos_pendientes as $prestamo): ?>
-                <tr>
-                    <td><?php echo $prestamo->nombres; ?></td>
-                    <td><?php echo $prestamo->carnetidentidad; ?></td>
-                    <td><?php echo $prestamo->titulo; ?></td>
-                    <td><?php echo date('d/m/Y H:i:s', strtotime($prestamo->fechaprestamo)); ?></td>
-                    <td>
-                        <?php echo form_open('Prestamo_controlador/procesarPrestamo'); ?>
-                            
-                        <input type="hidden" name="prestamo_id" value="<?php echo $prestamo->id; ?>">
-                            <button type="submit" class="btn btn-success" 
-                                onclick="return confirm('¿Estás seguro de que deseas procesar este préstamo?');">
-                                Procesar Préstamo
-                            </button>
-                        <?php echo form_close(); ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
     </table>
 <?php else: ?>
     <p>No hay solicitudes pendientes.</p>

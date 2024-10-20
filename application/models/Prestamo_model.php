@@ -164,7 +164,7 @@ class Prestamo_model extends CI_Model {
         // Crear un array con los datos a actualizar
         $data = array(
             'fechadevolucion' => $fecha_devolucion,
-            'estado' => 0 // Asumiendo que 1 significa "devuelto"
+            'estado' => 2 // Asumiendo que 1 significa "devuelto"
         );
 
         // Actualizar la tabla de préstamos usando el ID del préstamo
@@ -196,7 +196,7 @@ class Prestamo_model extends CI_Model {
         $this->db->join('usuario', 'prestamo.usuario_id = usuario.id');
         $this->db->join('libro_prestamo', 'prestamo.id = libro_prestamo.prestamo_id');
         $this->db->join('libro', 'libro_prestamo.libro_id = libro.id');
-        $this->db->where('prestamo.estado', 0); // Solo préstamos devueltos
+        $this->db->where('prestamo.estado', 2); // Solo préstamos devueltos
         $query = $this->db->get();
     
         return $query->result();
@@ -210,7 +210,7 @@ class Prestamo_model extends CI_Model {
 public function countDevoluciones()
 {
     // Contar préstamos que están disponibles (estado = 0)
-    $this->db->where('estado', 0); // 0 indica que el libro ha sido devuelto
+    $this->db->where('estado', 2); // 0 indica que el libro ha sido devuelto
     return $this->db->count_all_results('prestamo'); // Cambia 'prestamo' por el nombre real de tu tabla de préstamos
 }
 
